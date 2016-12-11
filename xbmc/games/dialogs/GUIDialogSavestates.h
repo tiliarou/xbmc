@@ -23,6 +23,7 @@
 #include "video/VideoDatabase.h" //! @todo
 #include "view/GUIViewControl.h"
 
+#include <memory>
 #include <string>
 
 class CFileItemList;
@@ -36,7 +37,7 @@ namespace GAME
   {
   public:
     CGUIDialogSavestates(void);
-    virtual ~CGUIDialogSavestates(void);
+    virtual ~CGUIDialogSavestates(void) = default;
 
     // implementation of CGUIControl via CGUIDialog
     virtual bool OnMessage(CGUIMessage& message) override;
@@ -62,7 +63,7 @@ namespace GAME
     void Update();
 
     // Window properties
-    CFileItemList*  m_vecItems;
+    std::unique_ptr<CFileItemList> m_vecItems;
     CGUIViewControl m_viewControl;
 
     // Game properties
