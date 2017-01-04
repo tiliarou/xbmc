@@ -1,4 +1,5 @@
 SRCS=GameClient.cpp \
+     GameClientInGameSaves.cpp \
      GameClientInput.cpp \
      GameClientKeyboard.cpp \
      GameClientMouse.cpp \
