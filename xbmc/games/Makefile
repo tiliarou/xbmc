@@ -1,4 +1,5 @@
-SRCS=GameSettings.cpp \
+SRCS=GameServices.cpp \
+     GameSettings.cpp \
      GameUtils.cpp \
 
 LIB=games.a
