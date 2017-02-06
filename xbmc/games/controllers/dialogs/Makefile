@@ -1,4 +1,6 @@
-SRCS=GUIDialogButtonCapture.cpp \
+SRCS=GUIDialogAxisDetection.cpp \
+     GUIDialogButtonCapture.cpp \
+     GUIDialogIgnoreInput.cpp \
 
 LIB=controllerdialogs.a
 
