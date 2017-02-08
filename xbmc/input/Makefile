@@ -1,4 +1,5 @@
-SRCS=ButtonTranslator.cpp \
+SRCS=Action.cpp \
+     ButtonTranslator.cpp \
      InertialScrollingHandler.cpp \
      InputCodingTableBaiduPY.cpp \
      InputCodingTableBasePY.cpp \
