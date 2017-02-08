@@ -1,4 +1,5 @@
 SRCS=KeyboardEasterEgg.cpp \
+     KeymapActionMap.cpp
 
 LIB=input_keyboard.a
 
