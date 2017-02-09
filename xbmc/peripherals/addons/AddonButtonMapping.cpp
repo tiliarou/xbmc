@@ -24,6 +24,7 @@
 #include "peripherals/addons/AddonButtonMap.h"
 #include "peripherals/Peripherals.h"
 
+using namespace KODI;
 using namespace JOYSTICK;
 using namespace PERIPHERALS;
 
