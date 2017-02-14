@@ -7,6 +7,7 @@ set(SOURCES ConvUtils.cpp
             LinuxTimezone.cpp
             PosixMountProvider.cpp
             RBP.cpp
+            SystemdUtils.cpp
             XFileUtils.cpp
             XHandle.cpp
             XMemUtils.cpp
@@ -26,6 +27,7 @@ set(HEADERS ConvUtils.h
             RBP.h
             stat_utf8.h
             stdio_utf8.h
+            SystemdUtils.h
             XFileUtils.h
             XHandle.h
             XHandlePublic.h

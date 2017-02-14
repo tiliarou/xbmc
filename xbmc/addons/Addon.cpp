@@ -50,6 +50,9 @@
 #ifdef TARGET_FREEBSD
 #include "freebsd/FreeBSDGNUReplacements.h"
 #endif
+#ifdef HAS_DBUS
+#include "linux/SystemdUtils.h"
+#endif
 
 using XFILE::CDirectory;
 using XFILE::CFile;
@@ -353,6 +356,17 @@ void OnEnabled(const std::string& id)
       CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_ADSPDLL))
     return addon->OnEnabled();
 
+#ifdef HAS_DBUS
+  if (CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_SERVICE))
+  {
+    std::string addonService = addon->ID() + ".service";
+    std::string addonServiceFullPath = StringUtils::Format("%s/system.d/%s.service", addon->Path().c_str(), addon->ID().c_str());
+    const char* addonServiceArrayFullPath[] = { addonServiceFullPath.c_str() };
+    CSystemdUtils::EnableUnit(addonServiceArrayFullPath, 1);
+    CSystemdUtils::StartUnit(addonService.c_str());
+  }
+#endif
+
   if (CAddonMgr::GetInstance().ServicesHasStarted())
   {
     if (CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_SERVICE))
@@ -370,6 +384,16 @@ void OnDisabled(const std::string& id)
   if (CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_PVRDLL, false) ||
       CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_ADSPDLL, false))
     return addon->OnDisabled();
+
+#ifdef HAS_DBUS
+  if (CAddonMgr::GetInstance().GetAddon(id, addon, ADDON_SERVICE, false))
+  {
+    std::string addonService = addon->ID() + ".service";
+    const char* addonServiceArray[] = { addonService.c_str() };
+    CSystemdUtils::StopUnit(addonService.c_str());
+    CSystemdUtils::DisableUnit(addonServiceArray, 1);
+  }
+#endif
 
   if (CAddonMgr::GetInstance().ServicesHasStarted())
   {
@@ -404,6 +428,16 @@ void OnPreInstall(const AddonPtr& addon)
 void OnPostInstall(const AddonPtr& addon, bool update, bool modal)
 {
   AddonPtr localAddon;
+
+#ifdef HAS_DBUS
+  if (CAddonMgr::GetInstance().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
+  {
+    std::string addonService = addon->ID() + ".service";
+    CSystemdUtils::StopUnit(addonService.c_str());
+    CSystemdUtils::StartUnit(addonService.c_str());
+  }
+#endif
+
   if (CAddonMgr::GetInstance().ServicesHasStarted())
   {
     if (CAddonMgr::GetInstance().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
@@ -419,6 +453,16 @@ void OnPostInstall(const AddonPtr& addon, bool update, bool modal)
 void OnPreUnInstall(const AddonPtr& addon)
 {
   AddonPtr localAddon;
+
+#ifdef HAS_DBUS
+  if (CAddonMgr::GetInstance().GetAddon(addon->ID(), localAddon, ADDON_SERVICE))
+  {
+    std::string addonService = addon->ID() + ".service";
+    const char* addonServiceArray[] = { addonService.c_str() };
+    CSystemdUtils::StopUnit(addonService.c_str());
+    CSystemdUtils::DisableUnit(addonServiceArray, 1);
+  }
+#endif
 
   if (CAddonMgr::GetInstance().ServicesHasStarted())
   {
