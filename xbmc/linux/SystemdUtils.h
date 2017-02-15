@@ -29,6 +29,7 @@ public:
   static bool DisableUnit(const char **arrayString, unsigned int length);
   static bool StartUnit(const char *unit);
   static bool StopUnit(const char *unit);
+  static bool SetTimezone(const char *timezone);
 };
 
 #endif

@@ -82,4 +82,24 @@ bool CSystemdUtils::StopUnit(const char *unit)
   return message.SendSystem() != NULL;
 }
 
+// timedated DBus interface specification:
+// https://www.freedesktop.org/wiki/Software/systemd/timedated
+
+#define TIMEDATED_DEST  "org.freedesktop.timedate1"
+#define TIMEDATED_PATH  "/org/freedesktop/timedate1"
+#define TIMEDATED_IFACE "org.freedesktop.timedate1"
+
+bool CSystemdUtils::SetTimezone(const char *timezone)
+{
+  CDBusMessage message(TIMEDATED_DEST, TIMEDATED_PATH, TIMEDATED_IFACE, "SetTimezone");
+
+  // Pass a value like "Europe/Berlin" to set the timezone
+  message.AppendArgument(timezone);
+
+  // The user_interaction boolean parameters can be used to control whether PolicyKit should interactively ask the user for authentication credentials if it needs to.
+  message.AppendArgument(false);
+
+  return message.SendSystem() != NULL;
+}
+
 #endif

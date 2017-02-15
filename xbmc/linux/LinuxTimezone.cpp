@@ -32,6 +32,9 @@
 #ifdef TARGET_FREEBSD
 #include "freebsd/FreeBSDGNUReplacements.h"
 #endif
+#ifdef HAS_DBUS
+#include "linux/SystemdUtils.h"
+#endif
 
 #include "ServiceBroker.h"
 #include "Util.h"
@@ -160,6 +163,9 @@ void CLinuxTimezone::OnSettingChanged(const CSetting *setting)
   const std::string &settingId = setting->GetId();
   if (settingId == CSettings::SETTING_LOCALE_TIMEZONE)
   {
+#ifdef HAS_DBUS
+    CSystemdUtils::SetTimezone(((CSettingString*)setting)->GetValue().c_str());
+#endif
     SetTimezone(((CSettingString*)setting)->GetValue());
 
     CDateTime::ResetTimezoneBias();
@@ -204,7 +210,7 @@ void CLinuxTimezone::SetTimezone(std::string timezoneName)
 #else
   bool use_timezone = false;
 #endif
-  
+
   if (use_timezone)
   {
     static char env_var[255];
