@@ -24,6 +24,7 @@
 #include "GUIPassword.h"
 #include "Util.h"
 #include "addons/AddonManager.h"
+#include "addons/BinaryAddonCache.h"
 #include "addons/Skin.h"
 #if defined(TARGET_ANDROID)
 #include "platform/android/activity/AndroidFeatures.h"
@@ -45,6 +46,7 @@
 #if defined(TARGET_DARWIN_OSX)
 #include "platform/darwin/DarwinUtils.h"
 #endif// defined(TARGET_DARWIN_OSX)
+#include "ServiceBroker.h"
 
 bool AddonHasSettings(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
 {
@@ -78,6 +80,18 @@ bool CheckPVRParentalPin(const std::string &condition, const std::string &value,
 bool HasPeripherals(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
 {
   return PERIPHERALS::g_peripherals.GetNumberOfPeripherals() > 0;
+}
+
+bool HasPeripheralLibraries(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
+{
+  using namespace ADDON;
+
+  VECADDONS peripheralAddons;
+
+  CBinaryAddonCache& addonCache = CServiceBroker::GetBinaryAddonCache();
+  addonCache.GetInstalledAddons(peripheralAddons, ADDON_PERIPHERALDLL);
+
+  return !peripheralAddons.empty();
 }
 
 bool HasRumbleFeature(const std::string &condition, const std::string &value, const CSetting *setting, void *data)
@@ -358,6 +372,7 @@ void CSettingConditions::Initialize()
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("checkmasterlock",               CheckMasterLock));
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("checkpvrparentalpin",           CheckPVRParentalPin));
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("hasperipherals",                HasPeripherals));
+  m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("hasperipherallibraries",        HasPeripheralLibraries));
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("hasrumblefeature",              HasRumbleFeature));
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("hasrumblecontroller",           HasRumbleController));
   m_complexConditions.insert(std::pair<std::string, SettingConditionCheck>("haspowerofffeature",            HasPowerOffFeature));
