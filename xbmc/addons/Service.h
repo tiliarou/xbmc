@@ -30,7 +30,8 @@ namespace ADDON
     enum TYPE
     {
       UNKNOWN,
-      PYTHON
+      PYTHON,
+      SERVICE_DLL
     };
 
     enum START_OPTION
@@ -48,9 +49,7 @@ namespace ADDON
     bool Stop();
     TYPE GetServiceType() { return m_type; }
     START_OPTION GetStartOption() { return m_startOption; }
-
-  protected:
-    void BuildServiceType();
+    static TYPE BuildServiceType(const CAddon* addon);
 
   private:
     TYPE m_type;
