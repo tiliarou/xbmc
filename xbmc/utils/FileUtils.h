@@ -35,4 +35,9 @@ public:
   \return Returns the file date, can return a invalid date if problems occur
   */
   static CDateTime GetModificationDate(const std::string& strFileNameAndPath, const bool& bUseLatestDate);
+
+  /*!
+   * \brief Perform a white/blacklist access check for security purposes
+   */
+  static bool ZebraListAccessCheck(const std::string &filePath);
 };

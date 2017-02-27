@@ -27,6 +27,7 @@
 #include "JobManager.h"
 #include "FileOperationJob.h"
 #include "URIUtils.h"
+#include "filesystem/SpecialProtocol.h"
 #include "filesystem/StackDirectory.h"
 #include "filesystem/MultiPathDirectory.h"
 #include <vector>
@@ -36,6 +37,9 @@
 #include "URL.h"
 #include "settings/Settings.h"
 #include "utils/Variant.h"
+
+#include <limits.h>
+#include <stdlib.h>
 
 using namespace XFILE;
 
@@ -226,4 +230,63 @@ CDateTime CFileUtils::GetModificationDate(const std::string& strFileNameAndPath,
     CLog::Log(LOGERROR, "%s unable to extract modification date for file (%s)", __FUNCTION__, strFileNameAndPath.c_str());
   }
   return dateAdded;
+}
+
+bool CFileUtils::ZebraListAccessCheck(const std::string &filePath)
+{
+  // Files that can expose user/pass of remote servers
+  static const std::vector<std::string> blacklist_files = {
+    "passwords.xml",
+    "sources.xml",
+    "guisettings.xml",
+    "advancedsettings.xml",
+  };
+
+  for (const auto& file : blacklist_files)
+  {
+    if (filePath.find(file) != std::string::npos)
+    {
+      CLog::Log(LOGDEBUG, "%s access denied to %s", __FUNCTION__, filePath.c_str());
+      return false;
+    }
+  }
+
+  char *fullpath = nullptr;
+#if defined(TARGET_POSIX)
+  fullpath = realpath(filePath.c_str(), nullptr);
+#elif defined(TARGET_WINDOWS)
+  auto len = GetFullPathName(filePath.c_str(), 0, nullptr, nullptr);
+  if (len > 0)
+  {
+    fullpath = reinterpret_cast<char *>(malloc(len));
+    len = GetFullPathName(filePath.c_str(), len, fullpath, nullptr);
+    if (len == 0)
+    {
+      free(fullpath);
+      fullpath = nullptr;
+      CLog::Log(LOGERROR, "%s - error getting full path", __FUNCTION__);
+    }
+  }
+#endif
+
+  if (fullpath)
+  {
+    const std::string testpath = fullpath;
+    free(fullpath);
+
+    // If this is a real path and accesses into user home, allow
+    auto userHome = CSpecialProtocol::TranslatePath("special://home");
+    if (testpath.find(userHome) != std::string::npos)
+      return true;
+
+    // If this is a real path and accesses outside app, deny
+    auto appRoot = CUtil::GetHomePath();
+    if (testpath.find(appRoot) == std::string::npos)
+    {
+      CLog::Log(LOGDEBUG, "%s access denied to %s", __FUNCTION__, filePath.c_str());
+      return false;
+    }
+  }
+
+  return true;
 }
