@@ -67,22 +67,14 @@ CDVDVideoCodec* CDVDFactoryCodec::CreateVideoCodec(CDVDStreamInfo &hint, CProces
 
   options.m_opaque_pointer = info.opaque_pointer;
 
+  // addon handler for this stream ?
+
   if (hint.codec == AV_CODEC_ID_NONE && hint.pixfmt != AV_PIX_FMT_NONE)
   {
     pCodec = OpenCodec(new CPixelConverter(processInfo), hint, options);
     if (pCodec)
       return pCodec;
   }
-
-  if (!(hint.codecOptions & CODEC_FORCE_SOFTWARE))
-  {
-#if defined(HAS_LIBAMCODEC)
-    // Amlogic can be present on multiple platforms (Linux, Android)
-    // try this first. if it does not open, we still try other hw decoders
-    pCodec = OpenCodec(new CDVDVideoCodecAmlogic(processInfo), hint, options);
-    if (pCodec)
-      return pCodec;
-#endif
 
   if (hint.externalInterfaces)
   {
