@@ -50,7 +50,7 @@
 #endif
 
 /* current Peripheral API version */
-#define PERIPHERAL_API_VERSION "1.3.1"
+#define PERIPHERAL_API_VERSION "1.3.2"
 
 /* min. Peripheral API version */
 #define PERIPHERAL_MIN_API_VERSION "1.3.1"
