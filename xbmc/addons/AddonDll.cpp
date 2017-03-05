@@ -336,9 +336,13 @@ TiXmlElement CAddonDll::MakeSetting(DllSetting& setting) const
       break;
     }
     case DllSetting::SPIN:
+    case DllSetting::SELECT:
     {
       node.SetAttribute("id", setting.id);
-      node.SetAttribute("type", "enum");
+      if (setting.type == DllSetting::SPIN)
+        node.SetAttribute("type", "enum");
+      else
+        node.SetAttribute("type", "select");
       node.SetAttribute("label", setting.label);
       std::string values;
       for (unsigned int i = 0; i < setting.entry.size(); i++)

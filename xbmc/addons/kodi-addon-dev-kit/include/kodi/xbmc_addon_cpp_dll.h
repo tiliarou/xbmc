@@ -29,7 +29,21 @@
 class DllSetting
 {
 public:
-  enum SETTING_TYPE { NONE=0, CHECK, SPIN };
+  enum SETTING_TYPE
+  {
+    NONE = 0,
+    CHECK,
+    SPIN,
+    SELECT,
+  };
+
+  DllSetting() :
+    type(NONE),
+    id(NULL),
+    label(NULL),
+    current(0)
+  {
+  }
 
   DllSetting(SETTING_TYPE t, const char *n, const char *l)
   {
@@ -51,26 +65,35 @@ public:
 
   DllSetting(const DllSetting &rhs) // copy constructor
   {
-    id = NULL;
-    label = NULL;
-    if (rhs.id)
+    *this = rhs;
+  }
+
+  DllSetting& operator=(const DllSetting &rhs)
+  {
+    if (this != &rhs)
     {
-      id = new char[strlen(rhs.id)+1];
-      strcpy(id, rhs.id);
+      id = NULL;
+      label = NULL;
+      if (rhs.id)
+      {
+        id = new char[strlen(rhs.id)+1];
+        strcpy(id, rhs.id);
+      }
+      if (rhs.label)
+      {
+        label = new char[strlen(rhs.label)+1];
+        strcpy(label, rhs.label);
+      }
+      current = rhs.current;
+      type = rhs.type;
+      for (unsigned int i = 0; i < rhs.entry.size(); i++)
+      {
+        char *lab = new char[strlen(rhs.entry[i]) + 1];
+        strcpy(lab, rhs.entry[i]);
+        entry.push_back(lab);
+      }
     }
-    if (rhs.label)
-    {
-      label = new char[strlen(rhs.label)+1];
-      strcpy(label, rhs.label);
-    }
-    current = rhs.current;
-    type = rhs.type;
-    for (unsigned int i = 0; i < rhs.entry.size(); i++)
-    {
-      char *lab = new char[strlen(rhs.entry[i]) + 1];
-      strcpy(lab, rhs.entry[i]);
-      entry.push_back(lab);
-    }
+    return *this;
   }
 
   ~DllSetting()
@@ -83,7 +106,7 @@ public:
 
   void AddEntry(const char *label)
   {
-    if (!label || type != SPIN) return;
+    if (!label || (type != SPIN && type != SELECT)) return;
     char *lab = new char[strlen(label) + 1];
     strcpy(lab, label);
     entry.push_back(lab);
@@ -114,19 +137,19 @@ public:
     {
       (*sSet)[i] = NULL;
       (*sSet)[i] = (ADDON_StructSetting*)malloc(sizeof(ADDON_StructSetting));
+      (*sSet)[i]->type = vecSet[i].type;
       (*sSet)[i]->id = NULL;
       (*sSet)[i]->label = NULL;
+      (*sSet)[i]->current = vecSet[i].current;
+      (*sSet)[i]->entry_elements = 0;
+      (*sSet)[i]->entry = NULL;
       uiElements++;
 
       if (vecSet[i].id && vecSet[i].label)
       {
         (*sSet)[i]->id = strdup(vecSet[i].id);
         (*sSet)[i]->label = strdup(vecSet[i].label);
-        (*sSet)[i]->type = vecSet[i].type;
-        (*sSet)[i]->current = vecSet[i].current;
-        (*sSet)[i]->entry_elements = 0;
-        (*sSet)[i]->entry = NULL;
-        if(vecSet[i].type == DllSetting::SPIN && !vecSet[i].entry.empty())
+        if((vecSet[i].type == DllSetting::SPIN || vecSet[i].type == DllSetting::SELECT) && !vecSet[i].entry.empty())
         {
           (*sSet)[i]->entry = (char**)malloc(vecSet[i].entry.size()*sizeof(char**));
           for(unsigned int j=0;j<vecSet[i].entry.size();j++)
@@ -152,7 +175,8 @@ public:
     for(unsigned int i=0;i<iElements;i++)
     {
       DllSetting vSet((DllSetting::SETTING_TYPE)(*sSet)[i]->type, (*sSet)[i]->id, (*sSet)[i]->label);
-      if((*sSet)[i]->type == DllSetting::SPIN)
+      if ((*sSet)[i]->type == DllSetting::SPIN ||
+          (*sSet)[i]->type == DllSetting::SELECT)
       {
         for(unsigned int j=0;j<(*sSet)[i]->entry_elements;j++)
         {
@@ -171,7 +195,8 @@ public:
 
     for(unsigned int i=0;i<iElements;i++)
     {
-      if((*sSet)[i]->type == DllSetting::SPIN)
+      if ((*sSet)[i]->type == DllSetting::SPIN ||
+          (*sSet)[i]->type == DllSetting::SELECT)
       {
         for(unsigned int j=0;j<(*sSet)[i]->entry_elements;j++)
         {
