@@ -138,6 +138,9 @@ void CPeripherals::Initialise()
 
 void CPeripherals::Clear()
 {
+  if (!m_bInitialised)
+    return;
+
   m_eventScanner.Stop();
 
   // avoid deadlocks by copying all busses into a temporary variable and destroying them from there
