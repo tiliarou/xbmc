@@ -345,10 +345,7 @@ bool CGUIDialogAddonSettings::ShowVirtualKeyboard(int iControl)
             int iSelected = pDlg->GetSelectedItem();
             if (iSelected >= 0)
             {
-              if (setting->Attribute("lvalues"))
-                value = StringUtils::Format("%i", iSelected);
-              else
-                value = valuesVec[iSelected];
+              value = StringUtils::Format("%i", iSelected);
               ((CGUIButtonControl*) control)->SetLabel2(valuesVec[iSelected]);
             }
           }
@@ -738,6 +735,13 @@ void CGUIDialogAddonSettings::CreateControls()
                   label = g_localizeStrings.Get(atoi(valuesVec[selected].c_str()));
                 ((CGUIButtonControl *)pControl)->SetLabel2(label);
               }
+            }
+            else if (type == "select" && !values.empty())
+            {
+              std::vector<std::string> labelVec = StringUtils::Split(values, '|');
+              int selected = atoi(value.c_str());
+              if (selected >= 0 && selected < (int)labelVec.size())
+                ((CGUIButtonControl *)pControl)->SetLabel2(labelVec[selected]);
             }
             else
               ((CGUIButtonControl *)pControl)->SetLabel2(value);
@@ -1142,7 +1146,7 @@ void CGUIDialogAddonSettings::SetDefaultSettings()
           m_settings[id] = value;
         else if (type == "bool")
           m_settings[id] = "false";
-        else if (type == "slider" || type == "enum")
+        else if (type == "slider" || type == "enum" || type == "select")
           m_settings[id] = "0";
         else
           m_settings[id] = "";
