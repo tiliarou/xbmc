@@ -143,6 +143,9 @@ void CPeripherals::Initialise()
 
 void CPeripherals::Clear()
 {
+  if (!m_bInitialised)
+    return;
+
   ANNOUNCEMENT::CAnnouncementManager::GetInstance().RemoveAnnouncer(this);
 
   m_eventScanner.Stop();
