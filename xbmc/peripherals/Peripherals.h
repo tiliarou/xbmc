@@ -235,7 +235,7 @@ namespace PERIPHERALS
      * @brief Request peripherals with the specified feature to perform a quick test
      * @return true if any peripherals support the feature, false otherwise
      */
-    bool TestFeature(PeripheralFeature feature);
+    void TestFeature(PeripheralFeature feature);
 
     bool SupportsCEC() const
     {
