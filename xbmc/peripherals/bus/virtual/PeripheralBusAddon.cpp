@@ -223,6 +223,14 @@ void CPeripheralBusAddon::EnableButtonMapping()
   }
 }
 
+void CPeripheralBusAddon::PowerOff(const std::string& strLocation)
+{
+  PeripheralAddonPtr addon;
+  unsigned int peripheralIndex;
+  if (SplitLocation(strLocation, addon, peripheralIndex))
+    addon->PowerOffJoystick(peripheralIndex);
+}
+
 void CPeripheralBusAddon::UnregisterRemovedDevices(const PeripheralScanResults &results)
 {
   CSingleLock lock(m_critSection);
