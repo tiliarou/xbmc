@@ -48,7 +48,7 @@ bool CPeripheralBus::InitializeProperties(CPeripheral& peripheral)
   if (peripheral.Type() == PERIPHERAL_JOYSTICK)
   {
     // Ensure an add-on is present to translate input
-    if (!g_peripherals.GetInstance().GetAddonWithButtonMap(&peripheral))
+    if (!m_manager->GetAddonWithButtonMap(&peripheral))
     {
       CLog::Log(LOGWARNING, "Button mapping add-on not present for %s (%s), skipping", peripheral.Location().c_str(), peripheral.DeviceName().c_str());
       return false;
@@ -128,7 +128,7 @@ void CPeripheralBus::RegisterNewDevices(const PeripheralScanResults &results)
   {
     const PeripheralScanResult& result = results.m_results.at(iResultPtr);
     if (!HasPeripheral(result.m_strLocation))
-      g_peripherals.CreatePeripheral(*this, result);
+      m_manager->CreatePeripheral(*this, result);
   }
 }
 
@@ -142,7 +142,7 @@ bool CPeripheralBus::ScanForDevices(void)
     UnregisterRemovedDevices(results);
     RegisterNewDevices(results);
 
-    CPeripherals::GetInstance().NotifyObservers(ObservableMessagePeripheralsChanged);
+    m_manager->NotifyObservers(ObservableMessagePeripheralsChanged);
 
     bReturn = true;
   }

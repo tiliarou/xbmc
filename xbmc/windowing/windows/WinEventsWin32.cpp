@@ -53,7 +53,6 @@
 
 #ifdef TARGET_WINDOWS
 
-using namespace PERIPHERALS;
 using namespace KODI::MESSAGING;
 
 HWND g_hWnd = NULL;
@@ -794,13 +793,13 @@ LRESULT CALLBACK CWinEventsWin32::WndProc(HWND hWnd, UINT uMsg, WPARAM wParam, L
         switch(wParam)
         {
           case DBT_DEVNODES_CHANGED:
-            g_peripherals.TriggerDeviceScan(PERIPHERAL_BUS_USB);
+            CServiceBroker::GetPeripherals().TriggerDeviceScan(PERIPHERAL_BUS_USB);
             break;
           case DBT_DEVICEARRIVAL:
           case DBT_DEVICEREMOVECOMPLETE:
             if (((_DEV_BROADCAST_HEADER*) lParam)->dbcd_devicetype == DBT_DEVTYP_DEVICEINTERFACE)
             {
-              g_peripherals.TriggerDeviceScan(PERIPHERAL_BUS_USB);
+              CServiceBroker::GetPeripherals().TriggerDeviceScan(PERIPHERAL_BUS_USB);
             }
             // check if an usb or optical media was inserted or removed
             if (((_DEV_BROADCAST_HEADER*) lParam)->dbcd_devicetype == DBT_DEVTYP_VOLUME)

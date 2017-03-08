@@ -23,13 +23,18 @@
 #include "peripherals/devices/Peripheral.h"
 #include "peripherals/Peripherals.h"
 
+#include <assert.h>
+
 using namespace KODI;
 using namespace GAME;
 using namespace JOYSTICK;
 using namespace PERIPHERALS;
 
-CPortMapper::CPortMapper()
+CPortMapper::CPortMapper(PERIPHERALS::CPeripherals* peripheralManager) :
+  m_peripheralManager(peripheralManager)
 {
+  assert(m_peripheralManager != nullptr);
+
   CPortManager::GetInstance().RegisterObserver(this);
 }
 
@@ -56,7 +61,7 @@ void CPortMapper::ProcessPeripherals()
   auto& oldPortMap = m_portMap;
 
   PeripheralVector devices;
-  g_peripherals.GetPeripheralsWithFeature(devices, FEATURE_JOYSTICK);
+  m_peripheralManager->GetPeripheralsWithFeature(devices, FEATURE_JOYSTICK);
 
   std::map<PeripheralPtr, IInputHandler*> newPortMap;
   CPortManager::GetInstance().MapDevices(devices, newPortMap);

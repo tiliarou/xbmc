@@ -96,7 +96,7 @@ void CPeripheralAddon::ResetProperties(void)
 
 ADDON::AddonPtr CPeripheralAddon::GetRunningInstance(void) const
 {
-  PeripheralBusAddonPtr addonBus = std::static_pointer_cast<CPeripheralBusAddon>(g_peripherals.GetBusByType(PERIPHERAL_BUS_ADDON));
+  PeripheralBusAddonPtr addonBus = std::static_pointer_cast<CPeripheralBusAddon>(CServiceBroker::GetPeripherals().GetBusByType(PERIPHERAL_BUS_ADDON));
   if (addonBus)
   {
     ADDON::AddonPtr peripheralAddon;
