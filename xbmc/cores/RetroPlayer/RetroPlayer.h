@@ -146,6 +146,11 @@ namespace RETRO
     virtual void UpdateRenderBuffers(int queued, int discard, int free) override {}
 
   private:
+    /*!
+     * \brief Closes the OSD and shows the FullscreenGame window
+     */
+    void CloseOSD();
+
     /**
      * \brief Dump game information (if any) to the debug log.
      */

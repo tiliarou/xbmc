@@ -26,6 +26,10 @@
 #include "games/addons/GameClient.h"
 #include "games/tags/GameInfoTag.h"
 #include "games/GameUtils.h"
+#include "guilib/GUIDialog.h"
+#include "guilib/GUIWindowManager.h"
+#include "guilib/WindowIDs.h"
+#include "settings/MediaSettings.h"
 #include "threads/SingleLock.h"
 #include "utils/log.h"
 #include "utils/MathUtils.h"
@@ -53,6 +57,14 @@ bool CRetroPlayer::OpenFile(const CFileItem& file, const CPlayerOptions& options
 {
   std::string redactedPath = CURL::GetRedacted(file.GetPath());
   CLog::Log(LOGINFO, "RetroPlayer: Opening: %s", redactedPath.c_str());
+
+  // Reset game settings
+  CMediaSettings::GetInstance().GetCurrentGameSettings() = CMediaSettings::GetInstance().GetDefaultGameSettings();
+
+  //! @todo - Remove this when RetroPlayer has a renderer
+  CVideoSettings &videoSettings = CMediaSettings::GetInstance().GetCurrentVideoSettings();
+  videoSettings.m_ScalingMethod = CMediaSettings::GetInstance().GetCurrentGameSettings().ScalingMethod();
+  videoSettings.m_ViewMode = CMediaSettings::GetInstance().GetCurrentGameSettings().ViewMode();
 
   CSingleLock lock(m_mutex);
 
@@ -155,6 +167,9 @@ void CRetroPlayer::Pause()
   {
     m_gameClient->GetPlayback()->PauseUnpause();
     m_audio->Enable(m_gameClient->GetPlayback()->GetSpeed() == 1.0);
+
+    if (m_gameClient->GetPlayback()->GetSpeed() != 0.0)
+      CloseOSD();
   }
 }
 
@@ -298,6 +313,9 @@ void CRetroPlayer::SetSpeed(float speed)
 
     m_gameClient->GetPlayback()->SetSpeed(speed);
     m_audio->Enable(m_gameClient->GetPlayback()->GetSpeed() == 1.0);
+
+    if (m_gameClient->GetPlayback()->GetSpeed() != 0.0)
+      CloseOSD();
   }
 }
 
@@ -340,6 +358,13 @@ void CRetroPlayer::UpdateClockSync(bool enabled)
 void CRetroPlayer::UpdateRenderInfo(CRenderInfo &info)
 {
   m_processInfo->UpdateRenderInfo(info);
+}
+
+void CRetroPlayer::CloseOSD()
+{
+  CGUIDialog *pDialog = g_windowManager.GetDialog(WINDOW_DIALOG_GAME_OSD);
+  if (pDialog)
+    pDialog->Close(true, WINDOW_FULLSCREEN_GAME);
 }
 
 void CRetroPlayer::PrintGameInfo(const CFileItem &file) const

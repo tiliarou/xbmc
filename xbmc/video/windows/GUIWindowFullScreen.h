@@ -44,6 +44,7 @@ private:
   void SeekChapter(int iChapter);
   void ToggleOSD();
   void TriggerOSD();
+  int GetOSDWindowID();
 
   bool m_viewModeChanged;
   unsigned int m_dwShowViewModeTimeout;

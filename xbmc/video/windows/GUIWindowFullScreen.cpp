@@ -447,7 +447,7 @@ void CGUIWindowFullScreen::SeekChapter(int iChapter)
 
 void CGUIWindowFullScreen::ToggleOSD()
 {
-  CGUIDialogVideoOSD *pOSD = g_windowManager.GetWindow<CGUIDialogVideoOSD>(WINDOW_DIALOG_VIDEO_OSD);
+  CGUIDialog *pOSD = g_windowManager.GetWindow<CGUIDialog>(GetOSDWindowID());
   if (pOSD)
   {
     if (pOSD->IsDialogRunning())
@@ -461,10 +461,11 @@ void CGUIWindowFullScreen::ToggleOSD()
 
 void CGUIWindowFullScreen::TriggerOSD()
 {
-  CGUIDialogVideoOSD *pOSD = g_windowManager.GetWindow<CGUIDialogVideoOSD>(WINDOW_DIALOG_VIDEO_OSD);
+  CGUIDialog *pOSD = g_windowManager.GetWindow<CGUIDialog>(GetOSDWindowID());
   if (pOSD && !pOSD->IsDialogRunning())
   {
-    pOSD->SetAutoClose(3000);
+    if (!g_application.m_pPlayer->IsPlayingGame())
+      pOSD->SetAutoClose(3000);
     pOSD->Open();
   }
 }
@@ -472,4 +473,12 @@ void CGUIWindowFullScreen::TriggerOSD()
 bool CGUIWindowFullScreen::HasVisibleControls()
 {
   return m_controlStats->nCountVisible > 0;
+}
+
+int CGUIWindowFullScreen::GetOSDWindowID()
+{
+  if (g_application.m_pPlayer->IsPlayingGame())
+    return WINDOW_DIALOG_GAME_OSD;
+  else
+    return WINDOW_DIALOG_VIDEO_OSD;
 }
