@@ -44,6 +44,7 @@ bool CDialogGameOSD::OnAction(const CAction &action)
     return true;
   }
   case ACTION_PLAYER_PLAY:
+  case ACTION_PLAYER_RESET:
   case ACTION_PREV_ITEM:
   case ACTION_STOP:
   {

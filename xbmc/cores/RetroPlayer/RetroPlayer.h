@@ -113,7 +113,7 @@ namespace RETRO
     //virtual bool IsInMenu() const override { return false; }
     //virtual bool HasMenu() const override { return false; }
     //virtual void DoAudioWork() override { }
-    //virtual bool OnAction(const CAction &action) override { return false; }
+    virtual bool OnAction(const CAction &action) override;
     virtual std::string GetPlayerState() override;
     virtual bool SetPlayerState(const std::string& state) override;
     //virtual std::string GetPlayingTitle() override { return ""; }
