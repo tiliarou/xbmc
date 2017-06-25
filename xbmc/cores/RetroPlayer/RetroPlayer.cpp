@@ -340,6 +340,46 @@ bool CRetroPlayer::SetPlayerState(const std::string& state)
   return false;
 }
 
+void CRetroPlayer::FrameMove()
+{
+  m_renderManager.FrameMove();
+
+  if (m_gameClient)
+  {
+    const bool bFullscreen = (g_windowManager.GetActiveWindowID() == WINDOW_FULLSCREEN_GAME);
+
+    switch (m_state)
+    {
+    case State::STARTING:
+    {
+      if (bFullscreen)
+        m_state = State::FULLSCREEN;
+      break;
+    }
+    case State::FULLSCREEN:
+    {
+      if (!bFullscreen)
+      {
+        m_priorSpeed = m_gameClient->GetPlayback()->GetSpeed();
+        m_gameClient->GetPlayback()->SetSpeed(0.0);
+        m_state = State::BACKGROUND;
+      }
+      break;
+    }
+    case State::BACKGROUND:
+    {
+      if (bFullscreen)
+      {
+        if (m_gameClient->GetPlayback()->GetSpeed() == 0.0)
+          m_gameClient->GetPlayback()->SetSpeed(m_priorSpeed);
+        m_state = State::FULLSCREEN;
+      }
+      break;
+    }
+    }
+  }
+}
+
 bool CRetroPlayer::Supports(EINTERLACEMETHOD method)
 {
   return m_processInfo->Supports(method);

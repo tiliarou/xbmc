@@ -120,7 +120,7 @@ namespace RETRO
     //virtual bool SwitchChannel(const PVR::CPVRChannelPtr &channel) override { return false; }
     //virtual void GetAudioCapabilities(std::vector<int> &audioCaps) override { audioCaps.assign(1,IPC_AUD_ALL); }
     //virtual void GetSubtitleCapabilities(std::vector<int> &subCaps) override { subCaps.assign(1,IPC_SUBS_ALL); }
-    virtual void FrameMove() override { m_renderManager.FrameMove(); }
+    virtual void FrameMove() override;
     virtual void Render(bool clear, uint32_t alpha = 255, bool gui = true) override { m_renderManager.Render(clear, 0, alpha, gui); }
     virtual void FlushRenderer() override { m_renderManager.Flush(); }
     virtual void SetRenderViewMode(int mode) override { m_renderManager.SetViewMode(mode); }
@@ -156,6 +156,15 @@ namespace RETRO
      */
     void PrintGameInfo(const CFileItem &file) const;
 
+    enum class State
+    {
+      STARTING,
+      FULLSCREEN,
+      BACKGROUND,
+    };
+
+    State                              m_state = State::STARTING;
+    double                             m_priorSpeed = 0.0f; // Speed of gameplay before entering OSD
     CDVDClock                          m_clock;
     CRenderManager                     m_renderManager;
     std::unique_ptr<CProcessInfo>      m_processInfo;
