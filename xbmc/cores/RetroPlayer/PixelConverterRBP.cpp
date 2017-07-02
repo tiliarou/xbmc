@@ -144,7 +144,7 @@ bool CPixelConverterRBP::Decode(const uint8_t* pData, unsigned int size)
   return true;
 }
 
-void CPixelConverterRBP::GetPicture(VideoPicture& picture)
+void CPixelConverterRBP::GetPicture(RPVideoPicture& picture)
 {
   if (picture.videoBuffer)
     picture.videoBuffer->Release();

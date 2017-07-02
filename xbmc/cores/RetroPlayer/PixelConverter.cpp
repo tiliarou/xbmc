@@ -19,9 +19,10 @@
  */
 
 #include "PixelConverter.h"
-#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
-#include "cores/VideoPlayer/Process/VideoBuffer.h"
-#include "cores/VideoPlayer/TimingConstants.h"
+#include "cores/VideoPlayer/DVDClock.h"
+#include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
+#include "VideoRenderers/RPVideoPicture.h"
+#include "VideoRenderers/RPRenderFormats.h"
 #include "threads/CriticalSection.h"
 #include "threads/SingleLock.h"
 #include "utils/log.h"
@@ -178,6 +179,7 @@ bool CPixelConverter::Open(AVPixelFormat pixfmt, AVPixelFormat targetfmt, unsign
     return false;
 
   m_targetFormat = targetfmt;
+
   m_width = width;
   m_height = height;
 
@@ -235,7 +237,7 @@ bool CPixelConverter::Decode(const uint8_t* pData, unsigned int size)
   return true;
 }
 
-void CPixelConverter::GetPicture(VideoPicture& dvdVideoPicture)
+void CPixelConverter::GetPicture(RPVideoPicture& dvdRPVideoPicture)
 {
   if (m_pFrame != nullptr)
   {

@@ -20,13 +20,14 @@
 #pragma once
 
 #include "IPixelConverter.h"
+#include "cores/RetroPlayer/VideoRenderers/RPRenderFormats.h"
 
 #include <memory>
 #include <stdint.h>
 
 class CPixelBufferPoolFFmpeg;
 struct AVFrame;
-struct VideoPicture;
+struct RPVideoPicture;
 struct SwsContext;
 
 class CPixelConverter : public IPixelConverter
@@ -39,7 +40,7 @@ public:
   bool Open(AVPixelFormat pixfmt, AVPixelFormat target, unsigned int width, unsigned int height) override;
   void Dispose() override;
   bool Decode(const uint8_t* pData, unsigned int size) override;
-  void GetPicture(VideoPicture& dvdVideoPicture) override;
+  void GetPicture(RPVideoPicture& dvdRPVideoPicture) override;
 
 protected:
   bool AllocateBuffers(AVFrame *pFrame) const;

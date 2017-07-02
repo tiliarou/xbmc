@@ -31,8 +31,8 @@ namespace MMAL {
 };
 
 struct AVFrame;
-struct VideoPicture;
 struct SwsContext;
+struct RPVideoPicture;
 
 class CPixelConverterRBP : public CPixelConverter
 {
@@ -41,10 +41,10 @@ public:
   ~CPixelConverterRBP() override { Dispose(); }
 
   // implementation of IPixelConverter
-  virtual bool Open(AVPixelFormat pixfmt, AVPixelFormat target, unsigned int width, unsigned int height) override;
-  virtual void Dispose() override;
-  virtual bool Decode(const uint8_t* pData, unsigned int size) override;
-  virtual void GetPicture(VideoPicture& picture) override;
+  bool Open(AVPixelFormat pixfmt, AVPixelFormat target, unsigned int width, unsigned int height) override;
+  void Dispose() override;
+  bool Decode(const uint8_t* pData, unsigned int size) override;
+  void GetPicture(RPVideoPicture& dvdRPVideoPicture) override;
 
 protected:
   struct PixelFormatTargetTable
