@@ -19,12 +19,13 @@
  */
 
 #include "PixelConverter.h"
-#include "cores/VideoPlayer/DVDClock.h"
 #include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
+#include "TimingConstants.h"
 #include "VideoRenderers/RPVideoPicture.h"
 #include "VideoRenderers/RPRenderFormats.h"
 #include "threads/CriticalSection.h"
 #include "threads/SingleLock.h"
+#include "VideoRenderers/RPRenderUtils.h"
 #include "utils/log.h"
 
 extern "C"
@@ -243,18 +244,18 @@ void CPixelConverter::GetPicture(RPVideoPicture& dvdRPVideoPicture)
   {
     CPixelBufferFFmpeg *buffer = dynamic_cast<CPixelBufferFFmpeg*>(m_pixelBufferPool->Get());
     buffer->SetRef(m_pFrame);
-    dvdVideoPicture.videoBuffer = buffer;
+    dvdRPVideoPicture.videoBuffer = buffer;
   }
 
-  dvdVideoPicture.dts            = DVD_NOPTS_VALUE;
-  dvdVideoPicture.pts            = 0.0; // Show immediately
-  dvdVideoPicture.iFlags         = 0;
-  dvdVideoPicture.color_matrix   = 4; // CONF_FLAGS_YUVCOEF_BT601
-  dvdVideoPicture.color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
-  dvdVideoPicture.iWidth         = m_width;
-  dvdVideoPicture.iHeight        = m_height;
-  dvdVideoPicture.iDisplayWidth  = m_width; //! @todo: Update if aspect ratio changes
-  dvdVideoPicture.iDisplayHeight = m_height;
+  dvdRPVideoPicture.dts            = DVD_NOPTS_VALUE;
+  dvdRPVideoPicture.pts            = 0.0; // Show immediately
+  dvdRPVideoPicture.iFlags         = 0;
+  dvdRPVideoPicture.color_matrix   = 4; // CONF_FLAGS_YUVCOEF_BT601
+  dvdRPVideoPicture.color_range    = 0; // *not* CONF_FLAGS_YUV_FULLRANGE
+  dvdRPVideoPicture.iWidth         = m_width;
+  dvdRPVideoPicture.iHeight        = m_height;
+  dvdRPVideoPicture.iDisplayWidth  = m_width; //! @todo: Update if aspect ratio changes
+  dvdRPVideoPicture.iDisplayHeight = m_height;
 }
 
 bool CPixelConverter::AllocateBuffers(AVFrame *pFrame) const

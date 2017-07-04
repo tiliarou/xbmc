@@ -22,9 +22,9 @@
 #include "RetroPlayerDefines.h"
 #include "PixelConverter.h"
 #include "PixelConverterRBP.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
-#include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
+#include "VideoRenderers/RPRenderFlags.h"
+#include "VideoRenderers/RPRenderUtils.h"
 #include "VideoRenderers/RPVideoPicture.h"
 #include "utils/log.h"
 
@@ -157,6 +157,15 @@ bool CRetroPlayerVideo::Configure(RPVideoPicture& picture)
     if (m_bConfigured)
     {
       // Update process info
+<<<<<<< HEAD
+=======
+      AVPixelFormat pixfmt = static_cast<AVPixelFormat>(RPRenderUtils::PixfmtFromEFormat(picture.format));
+      if (pixfmt != AV_PIX_FMT_NONE)
+      {
+        //! @todo
+        //m_processInfo.SetVideoPixelFormat(CDVDVideoCodecFFmpeg::GetPixelFormatName(pixfmt));
+      }
+>>>>>>> RetroPlayer: Introduce RPRenderUtils
       m_processInfo.SetVideoDimensions(picture.iWidth, picture.iHeight);
       m_processInfo.SetVideoFps(static_cast<float>(m_framerate));
     }
@@ -220,4 +229,11 @@ void CRetroPlayerVideo::SendPicture(RPVideoPicture& picture)
     // Video device might not be done yet, drop the frame
     m_droppedFrames++;
   }
+<<<<<<< HEAD
+=======
+  else
+  {
+    m_renderManager.FlipPage(bAbortOutput, 0.0, VS_INTERLACEMETHOD_NONE, RP_FS_NONE, false);
+  }
+>>>>>>> RetroPlayer: Introduce RPRenderUtils
 }
