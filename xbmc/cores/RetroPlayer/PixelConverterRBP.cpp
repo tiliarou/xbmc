@@ -23,6 +23,8 @@
 #include "settings/AdvancedSettings.h"
 #include "PixelConverterRBP.h"
 #include "cores/VideoPlayer/DVDCodecs/Video/MMALFFmpeg.h"
+#include "cores/VideoPlayer/DVDClock.h"
+#include "cores/RetroPlayer/VideoRenderers/HwDecRender/RPMMALRenderer.h"
 #include "linux/RBP.h"
 #include "utils/log.h"
 #include "cores/VideoPlayer/TimingConstants.h"
