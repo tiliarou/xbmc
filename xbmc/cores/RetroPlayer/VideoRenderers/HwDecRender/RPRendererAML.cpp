@@ -29,7 +29,6 @@
 #include "utils/ScreenshotAML.h"
 #include "settings/MediaSettings.h"
 #include "windowing/WindowingFactory.h"
-#include "cores/RenderCapture.h"
 #include "settings/AdvancedSettings.h"
 
 CRPRendererAML::CRPRendererAML()
@@ -73,14 +72,6 @@ CRPRenderInfo CRPRendererAML::GetRenderInfo()
   info.max_buffer_size = m_numRenderBuffers;
   info.optimal_buffer_size = m_numRenderBuffers;
   return info;
-}
-
-bool CRPRendererAML::RenderCapture(CRenderCapture* capture)
-{
-  capture->BeginRender();
-  capture->EndRender();
-  CScreenshotAML::CaptureVideoFrame((unsigned char *)capture->GetRenderBuffer(), capture->GetWidth(), capture->GetHeight());
-  return true;
 }
 
 int CRPRendererAML::GetImage(YV12ImageRP *image, int source, bool readonly)

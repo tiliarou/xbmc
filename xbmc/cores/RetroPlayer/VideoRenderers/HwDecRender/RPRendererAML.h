@@ -32,7 +32,6 @@ public:
   CRPRendererAML();
   virtual ~CRPRendererAML();
 
-  virtual bool RenderCapture(CRenderCapture* capture);
   virtual void AddRPVideoPictureHW(RPVideoPicture &picture, int index);
   virtual void ReleaseBuffer(int idx);
   virtual bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void *hwPic, unsigned int orientation);

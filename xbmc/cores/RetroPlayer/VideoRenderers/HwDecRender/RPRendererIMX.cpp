@@ -27,7 +27,6 @@
 #include "utils/GLUtils.h"
 #include "settings/MediaSettings.h"
 #include "windowing/WindowingFactory.h"
-#include "cores/RenderCapture.h"
 #include "cores/RetroPlayer/VideoRenderers/RPRenderFlags.h"
 #include "cores/RetroPlayer/VideoRenderers/RPVideoPicture.h"
 
@@ -43,13 +42,6 @@ CRPRendererIMX::~CRPRendererIMX()
   UnInit();
   std::for_each(m_bufHistory.begin(), m_bufHistory.end(), Release);
   g_IMX.Deinitialize();
-}
-
-bool CRPRendererIMX::RenderCapture(CRenderCapture* capture)
-{
-  capture->BeginRender();
-  capture->EndRender();
-  return true;
 }
 
 void CRPRendererIMX::AddRPVideoPictureHW(DVDRPVideoPicture &picture, int index)

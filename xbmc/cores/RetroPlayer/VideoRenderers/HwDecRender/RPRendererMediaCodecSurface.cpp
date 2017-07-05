@@ -22,7 +22,6 @@
 
 #include "RPRendererMediaCodecSurface.h"
 
-#include "cores/RenderCapture.h"
 #include "guilib/GraphicContext.h"
 #include "rendering/RenderSystem.h"
 #include "settings/MediaSettings.h"
@@ -77,13 +76,6 @@ CRPRenderInfo CRPRendererMediaCodecSurface::GetRenderInfo()
   info.max_buffer_size = m_numRenderBuffers;
   info.optimal_buffer_size = m_numRenderBuffers;
   return info;
-}
-
-bool CRPRendererMediaCodecSurface::RenderCapture(CRenderCapture* capture)
-{
-  capture->BeginRender();
-  capture->EndRender();
-  return true;
 }
 
 int CRPRendererMediaCodecSurface::GetImage(YV12ImageRP *image, int source, bool readonly)

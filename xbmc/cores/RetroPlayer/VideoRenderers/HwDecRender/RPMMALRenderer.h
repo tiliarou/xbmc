@@ -28,7 +28,6 @@
 #include "../RPRenderFlags.h"
 #include "../RPRenderFormats.h"
 #include "../RPBaseRenderer.h"
-#include "cores/RenderCapture.h"
 #include "settings/VideoSettings.h"
 #include "cores/VideoPlayer/DVDStreamInfo.h"
 #include "cores/VideoPlayer/DVDCodecs/Video/MMALFFmpeg.h"
@@ -93,8 +92,6 @@ public:
 
   void Process();
   virtual void Update();
-
-  bool RenderCapture(CRenderCapture* capture);
 
   virtual bool         Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void* hwPic, unsigned int orientation);
   virtual int          GetImage(YV12ImageRP *image, int source = AUTOSOURCE, bool readonly = false);

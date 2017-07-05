@@ -35,7 +35,6 @@
 #include "cores/VideoPlayer/DVDClock.h"
 #include "RPRenderFormats.h"
 
-class CRenderCapture;
 struct RPVideoPicture;
 
 class CRPWinRenderer;
@@ -80,11 +79,6 @@ public:
   bool IsConfigured() const;
   void ToggleDebug();
 
-  unsigned int AllocRenderCapture();
-  void ReleaseRenderCapture(unsigned int captureId);
-  void StartRenderCapture(unsigned int captureId, unsigned int width, unsigned int height, int flags);
-  bool RenderCaptureGetPixels(unsigned int captureId, unsigned int millis, uint8_t *buffer, unsigned int size);
-
   // Functions called from GUI
   bool Supports(ERENDERFEATURE feature);
   bool Supports(ESCALINGMETHOD method);
@@ -126,11 +120,7 @@ public:
 
   /**
    * If player uses buffering it has to wait for a buffer before it calls
-<<<<<<< Updated upstream
-   * AddRPVideoPicture and AddOverlay. It waits for max 50 ms before it returns -1
-=======
    * AddRPVideoPicture. It waits for max 50 ms before it returns -1
->>>>>>> Stashed changes
    * in case no buffer is available. Player may call this in a loop and decides
    * by itself when it wants to drop a frame.
    * If no buffering is requested in Configure, player does not need to call this,
@@ -164,7 +154,6 @@ protected:
   bool Configure();
   void CreateRenderer();
   void DeleteRenderer();
-  void ManageCaptures();
 
   void UpdateDisplayLatency();
   void CheckEnableClockSync();
@@ -178,7 +167,6 @@ protected:
   int m_waitForBufferCount;
   int m_rendermethod;
   bool m_renderDebug;
-
 
   enum EPRESENTSTEP
   {
@@ -251,14 +239,4 @@ protected:
     bool m_enabled;
   };
   CClockSync m_clockSync;
-
-  void RenderCapture(CRenderCapture* capture);
-  void RemoveCaptures();
-  CCriticalSection m_captCritSect;
-  std::map<unsigned int, CRenderCapture*> m_captures;
-  static unsigned int m_nextCaptureId;
-  unsigned int m_captureWaitCounter;
-  //set to true when adding something to m_captures, set to false when m_captures is made empty
-  //std::list::empty() isn't thread safe, using an extra bool will save a lock per render when no captures are requested
-  bool m_hasCaptures;
 };

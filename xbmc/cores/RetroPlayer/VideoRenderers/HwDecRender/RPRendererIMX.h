@@ -35,8 +35,6 @@ public:
   CRPRendererIMX();
   virtual ~CRPRendererIMX();
 
-  virtual bool RenderCapture(CRenderCapture* capture) override;
-
   // Player functions
   virtual void AddRPVideoPictureHW(RPVideoPicture &picture, int index);
   virtual void ReleaseBuffer(int idx);
