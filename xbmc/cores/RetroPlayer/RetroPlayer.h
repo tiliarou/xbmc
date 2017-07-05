@@ -133,10 +133,6 @@ namespace RETRO
     EINTERLACEMETHOD GetDeinterlacingMethodDefault() override;
     bool Supports(ESCALINGMETHOD method) override { return m_renderManager.Supports(method); }
     bool Supports(ERENDERFEATURE feature) override { return m_renderManager.Supports(feature); }
-    unsigned int RenderCaptureAlloc() override { return m_renderManager.AllocRenderCapture(); }
-    void RenderCaptureRelease(unsigned int captureId) override { m_renderManager.ReleaseRenderCapture(captureId); }
-    void RenderCapture(unsigned int captureId, unsigned int width, unsigned int height, int flags) override { m_renderManager.StartRenderCapture(captureId, width, height, flags); }
-    bool RenderCaptureGetPixels(unsigned int captureId, unsigned int millis, uint8_t *buffer, unsigned int size) override { return m_renderManager.RenderCaptureGetPixels(captureId, millis, buffer, size); }
 
     // implementation of IRenderMsg
     void VideoParamsChange() override { }
@@ -144,8 +140,8 @@ namespace RETRO
     void UpdateClockSync(bool enabled) override { }
     void UpdateRenderInfo(CRPRenderInfo &info) override;
     void UpdateRenderBuffers(int queued, int discard, int free) override { }
-    void UpdateGuiRender(bool gui) override;
-    void UpdateVideoRender(bool video) override;
+    // void UpdateGuiRender(bool gui) override;
+    // void UpdateVideoRender(bool video) override;
 
   private:
     /*!
