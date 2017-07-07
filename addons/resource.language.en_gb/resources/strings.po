@@ -16978,7 +16978,7 @@ msgstr ""
 #. Button to erase the savestate
 #: xbmc/cores/RetroPlayer/RetroPlayer.cpp"
 msgctxt "#35218"
-msgid "Erase save"
+msgid "Erase savestate"
 msgstr ""
 
 #empty string with id 35219
