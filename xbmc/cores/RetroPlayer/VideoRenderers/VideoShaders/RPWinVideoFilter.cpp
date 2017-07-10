@@ -461,7 +461,7 @@ bool CRPConvolutionShader::ChooseKernelD3DFormat()
 
 bool CRPConvolutionShader::CreateHQKernel(ESCALINGMETHOD method)
 {
-  CConvolutionKernel kern(method, 256);
+  CRPConvolutionKernel kern(method, 256);
   void *kernelVals;
   int kernelValsSize;
 

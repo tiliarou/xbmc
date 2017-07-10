@@ -31,7 +31,7 @@
 
 #define SINC(x) (sin(M_PI * (x)) / (M_PI * (x)))
 
-CConvolutionKernel::CConvolutionKernel(ESCALINGMETHOD method, int size)
+CRPConvolutionKernel::CRPConvolutionKernel(ESCALINGMETHOD method, int size)
 {
   m_size = size;
   m_floatpixels = new float[m_size * 4];
@@ -53,7 +53,7 @@ CConvolutionKernel::CConvolutionKernel(ESCALINGMETHOD method, int size)
   ToUint8();
 }
 
-CConvolutionKernel::~CConvolutionKernel()
+CRPConvolutionKernel::~CRPConvolutionKernel()
 {
   delete [] m_floatpixels;
   delete [] m_intfractpixels;
@@ -62,7 +62,7 @@ CConvolutionKernel::~CConvolutionKernel()
 
 //generate a lanczos2 kernel which can be loaded with RGBA format
 //each value of RGBA has one tap, so a shader can load 4 taps with a single pixel lookup
-void CConvolutionKernel::Lanczos2()
+void CRPConvolutionKernel::Lanczos2()
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -89,7 +89,7 @@ void CConvolutionKernel::Lanczos2()
 //the two outer lobes of the lanczos3 kernel are added to the two lobes one step to the middle
 //this basically looks the same as lanczos3, but the kernel only has 4 taps,
 //so it can use the 4x4 convolution shader which is twice as fast as the 6x6 one
-void CConvolutionKernel::Lanczos3Fast()
+void CRPConvolutionKernel::Lanczos3Fast()
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -116,7 +116,7 @@ void CConvolutionKernel::Lanczos3Fast()
 
 //generate a lanczos3 kernel which can be loaded with RGBA format
 //each value of RGB has one tap, so a shader can load 3 taps with a single pixel lookup
-void CConvolutionKernel::Lanczos3()
+void CRPConvolutionKernel::Lanczos3()
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -148,7 +148,7 @@ void CConvolutionKernel::Lanczos3()
   }
 }
 
-void CConvolutionKernel::Spline36Fast()
+void CRPConvolutionKernel::Spline36Fast()
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -169,7 +169,7 @@ void CConvolutionKernel::Spline36Fast()
   }
 }
 
-void CConvolutionKernel::Spline36()
+void CRPConvolutionKernel::Spline36()
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -200,7 +200,7 @@ void CConvolutionKernel::Spline36()
 
 //generate a bicubic kernel which can be loaded with RGBA format
 //each value of RGBA has one tap, so a shader can load 4 taps with a single pixel lookup
-void CConvolutionKernel::Bicubic(double B, double C)
+void CRPConvolutionKernel::Bicubic(double B, double C)
 {
   for (int i = 0; i < m_size; i++)
   {
@@ -212,7 +212,7 @@ void CConvolutionKernel::Bicubic(double B, double C)
   }
 }
 
-double CConvolutionKernel::LanczosWeight(double x, double radius)
+double CRPConvolutionKernel::LanczosWeight(double x, double radius)
 {
   double ax = fabs(x);
 
@@ -224,7 +224,7 @@ double CConvolutionKernel::LanczosWeight(double x, double radius)
     return 0.0;
 }
 
-double CConvolutionKernel::BicubicWeight(double x, double B, double C)
+double CRPConvolutionKernel::BicubicWeight(double x, double B, double C)
 {
   double ax = fabs(x);
 
@@ -246,7 +246,7 @@ double CConvolutionKernel::BicubicWeight(double x, double B, double C)
   }
 }
 
-double CConvolutionKernel::Spline36Weight(double x)
+double CRPConvolutionKernel::Spline36Weight(double x)
 {
   double ax = fabs(x);
 
@@ -263,7 +263,7 @@ double CConvolutionKernel::Spline36Weight(double x)
 //with height 2 and converted back to real float in the shader
 //it only works when the kernel texture uses nearest neighbour, but there's almost no difference
 //between that and linear interpolation
-void CConvolutionKernel::ToIntFract()
+void CRPConvolutionKernel::ToIntFract()
 {
   m_intfractpixels = new uint8_t[m_size * 8];
 
@@ -284,7 +284,7 @@ void CConvolutionKernel::ToIntFract()
 }
 
 //convert to 8 bits unsigned
-void CConvolutionKernel::ToUint8()
+void CRPConvolutionKernel::ToUint8()
 {
   m_uint8pixels = new uint8_t[m_size * 4];
 

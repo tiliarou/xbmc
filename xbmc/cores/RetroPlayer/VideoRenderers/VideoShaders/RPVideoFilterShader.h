@@ -28,14 +28,14 @@
 
 #include "guilib/Shader.h"
 #include "settings/VideoSettings.h"
-#include "GLSLOutput.h"
+#include "RPGLSLOutput.h"
 
 namespace Shaders {
 
-  class BaseVideoFilterShader : public CGLSLShaderProgram
+  class RPBaseVideoFilterShader : public CGLSLShaderProgram
   {
   public:
-    BaseVideoFilterShader();
+    RPBaseVideoFilterShader();
     void Free() { CGLSLShaderProgram::Free(); }
     virtual void  SetSourceTexture(GLint ytex) { m_sourceTexUnit = ytex; }
     virtual void  SetWidth(int w)     { m_width  = w; m_stepX = w>0?1.0f/w:0; }
@@ -57,11 +57,11 @@ namespace Shaders {
     GLint m_hStretch = 0;
   };
 
-  class ConvolutionFilterShader : public BaseVideoFilterShader
+  class RPConvolutionFilterShader : public RPBaseVideoFilterShader
   {
   public:
-    ConvolutionFilterShader(ESCALINGMETHOD method, bool stretch, GLSLOutput *output=NULL);
-    ~ConvolutionFilterShader();
+    RPConvolutionFilterShader(ESCALINGMETHOD method, bool stretch, RPGLSLOutput *output=NULL);
+    ~RPConvolutionFilterShader();
     void OnCompiledAndLinked();
     bool OnEnabled();
     void OnDisabled();
@@ -80,18 +80,18 @@ namespace Shaders {
     bool           m_floattex; //if float textures are supported
     GLint          m_internalformat;
 
-    Shaders::GLSLOutput *m_glslOutput;
+    Shaders::RPGLSLOutput *m_RPGLSLOutput;
   };
 
-  class StretchFilterShader : public BaseVideoFilterShader
+  class RPStretchFilterShader : public RPBaseVideoFilterShader
   {
     public:
-      StretchFilterShader();
+      RPStretchFilterShader();
       void  OnCompiledAndLinked();
       bool  OnEnabled();
   };
 
-  class DefaultFilterShader : public BaseVideoFilterShader
+  class RPDefaultFilterShader : public RPBaseVideoFilterShader
   {
     public:
       void  OnCompiledAndLinked();

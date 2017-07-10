@@ -36,7 +36,7 @@
 
 class CBaseTexture;
 namespace Shaders { class BaseYUV2RGBShader; }
-namespace Shaders { class BaseVideoFilterShader; }
+namespace Shaders { class RPBaseVideoFilterShader; }
 
 
 #undef ALIGN
@@ -113,11 +113,11 @@ extern YUVCOEF yuv_coef_smtp240m;
 
 class CEvent;
 
-class CLinuxRendererGLES : public CRPBaseRenderer
+class CRPLinuxRendererGLES : public CRPBaseRenderer
 {
 public:
-  CLinuxRendererGLES();
-  virtual ~CLinuxRendererGLES();
+  CRPLinuxRendererGLES();
+  virtual ~CRPLinuxRendererGLES();
 
   virtual void Update();
 
@@ -187,7 +187,7 @@ protected:
   virtual int  GetImageHook(YV12ImageRP *image, int source = AUTOSOURCE, bool readonly = false) { return NOSOURCE; }
   virtual bool RenderUpdateCheckForEmptyField() { return true; }
 
-  CFrameBufferObject m_fbo;
+  CRPFrameBufferObject m_fbo;
 
   int m_iYV12RenderBuffer;
   int m_NumYV12Buffers;
@@ -252,7 +252,7 @@ protected:
 
   Shaders::BaseYUV2RGBShader     *m_pYUVProgShader;
   Shaders::BaseYUV2RGBShader     *m_pYUVBobShader;
-  Shaders::BaseVideoFilterShader *m_pVideoFilterShader;
+  Shaders::RPBaseVideoFilterShader *m_pVideoFilterShader;
   ESCALINGMETHOD m_scalingMethod;
   ESCALINGMETHOD m_scalingMethodGui;
 

@@ -25,7 +25,7 @@
 #include <string>
 #include <math.h>
 
-#include "VideoFilterShader.h"
+#include "RPVideoFilterShader.h"
 #include "utils/log.h"
 #include "utils/GLUtils.h"
 #include "RPConvolutionKernels.h"
@@ -41,10 +41,10 @@
 using namespace Shaders;
 
 //////////////////////////////////////////////////////////////////////
-// BaseVideoFilterShader - base class for video filter shaders
+// RPBaseVideoFilterShader - base class for video filter shaders
 //////////////////////////////////////////////////////////////////////
 
-BaseVideoFilterShader::BaseVideoFilterShader()
+RPBaseVideoFilterShader::RPBaseVideoFilterShader()
 {
   m_width = 1;
   m_height = 1;
@@ -77,7 +77,7 @@ BaseVideoFilterShader::BaseVideoFilterShader()
   PixelShader()->SetSource(shaderp);
 }
 
-ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method, bool stretch, GLSLOutput *output)
+RPConvolutionFilterShader::RPConvolutionFilterShader(ESCALINGMETHOD method, bool stretch, RPGLSLOutput *output)
 {
   m_method = method;
   m_kernelTex1 = 0;
@@ -128,9 +128,9 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method, bool str
     defines += "#define XBMC_STRETCH 0\n";
 
   // get defines from the output stage if used
-  m_glslOutput = output;
-  if (m_glslOutput) {
-    defines += m_glslOutput->GetDefines();
+  m_RPGLSLOutput = output;
+  if (m_RPGLSLOutput) {
+    defines += m_RPGLSLOutput->GetDefines();
   }
 
   //tell shader if we're using a 1D texture
@@ -140,17 +140,17 @@ ConvolutionFilterShader::ConvolutionFilterShader(ESCALINGMETHOD method, bool str
   defines += "#define USE1DTEXTURE 0\n";
 #endif
 
-  CLog::Log(LOGDEBUG, "GL: ConvolutionFilterShader: using %s defines:\n%s", shadername.c_str(), defines.c_str());
+  CLog::Log(LOGDEBUG, "GL: RPConvolutionFilterShader: using %s defines:\n%s", shadername.c_str(), defines.c_str());
   PixelShader()->LoadSource(shadername, defines);
   PixelShader()->AppendSource("output.glsl");
 }
 
-ConvolutionFilterShader::~ConvolutionFilterShader()
+RPConvolutionFilterShader::~RPConvolutionFilterShader()
 {
-  delete m_glslOutput;
+  delete m_RPGLSLOutput;
 }
 
-void ConvolutionFilterShader::OnCompiledAndLinked()
+void RPConvolutionFilterShader::OnCompiledAndLinked()
 {
   // obtain shader attribute handles on successful compilation
   m_hSourceTex = glGetUniformLocation(ProgramHandle(), "img");
@@ -158,7 +158,7 @@ void ConvolutionFilterShader::OnCompiledAndLinked()
   m_hKernTex   = glGetUniformLocation(ProgramHandle(), "kernelTex");
   m_hStretch   = glGetUniformLocation(ProgramHandle(), "m_stretch");
 
-  CConvolutionKernel kernel(m_method, 256);
+  CRPConvolutionKernel kernel(m_method, 256);
 
   if (m_kernelTex1)
   {
@@ -170,7 +170,7 @@ void ConvolutionFilterShader::OnCompiledAndLinked()
 
   if ((m_kernelTex1<=0))
   {
-    CLog::Log(LOGERROR, "GL: ConvolutionFilterShader: Error creating kernel texture");
+    CLog::Log(LOGERROR, "GL: RPConvolutionFilterShader: Error creating kernel texture");
     return;
   }
 
@@ -209,10 +209,10 @@ void ConvolutionFilterShader::OnCompiledAndLinked()
 
   VerifyGLState();
 
-  if (m_glslOutput) m_glslOutput->OnCompiledAndLinked(ProgramHandle());
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnCompiledAndLinked(ProgramHandle());
 }
 
-bool ConvolutionFilterShader::OnEnabled()
+bool RPConvolutionFilterShader::OnEnabled()
 {
   // set shader attributes once enabled
   glActiveTexture(GL_TEXTURE2);
@@ -224,36 +224,36 @@ bool ConvolutionFilterShader::OnEnabled()
   glUniform2f(m_hStepXY, m_stepX, m_stepY);
   glUniform1f(m_hStretch, m_stretch);
   VerifyGLState();
-  if (m_glslOutput) m_glslOutput->OnEnabled();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnEnabled();
   return true;
 }
 
-void ConvolutionFilterShader::OnDisabled()
+void RPConvolutionFilterShader::OnDisabled()
 {
-  if (m_glslOutput) m_glslOutput->OnDisabled();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnDisabled();
 }
 
-void ConvolutionFilterShader::Free()
+void RPConvolutionFilterShader::Free()
 {
   if (m_kernelTex1)
     glDeleteTextures(1, &m_kernelTex1);
   m_kernelTex1 = 0;
-  if (m_glslOutput) m_glslOutput->Free();
-  BaseVideoFilterShader::Free();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->Free();
+  RPBaseVideoFilterShader::Free();
 }
 
-StretchFilterShader::StretchFilterShader()
+RPStretchFilterShader::RPStretchFilterShader()
 {
   PixelShader()->LoadSource("stretch.glsl");
 }
 
-void StretchFilterShader::OnCompiledAndLinked()
+void RPStretchFilterShader::OnCompiledAndLinked()
 {
   m_hSourceTex = glGetUniformLocation(ProgramHandle(), "img");
   m_hStretch   = glGetUniformLocation(ProgramHandle(), "m_stretch");
 }
 
-bool StretchFilterShader::OnEnabled()
+bool RPStretchFilterShader::OnEnabled()
 {
   glUniform1i(m_hSourceTex, m_sourceTexUnit);
   glUniform1f(m_hStretch, m_stretch);
@@ -261,12 +261,12 @@ bool StretchFilterShader::OnEnabled()
   return true;
 }
 
-void DefaultFilterShader::OnCompiledAndLinked()
+void RPDefaultFilterShader::OnCompiledAndLinked()
 {
   m_hSourceTex = glGetUniformLocation(ProgramHandle(), "img");
 }
 
-bool DefaultFilterShader::OnEnabled()
+bool RPDefaultFilterShader::OnEnabled()
 {
   glUniform1i(m_hSourceTex, m_sourceTexUnit);
   VerifyGLState();

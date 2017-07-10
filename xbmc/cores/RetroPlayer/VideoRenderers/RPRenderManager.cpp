@@ -41,9 +41,7 @@
 #include "settings/Settings.h"
 
 #if defined(HAS_GL)
-#include "LinuxRendererGL.h"
-#include "HwDecRender/RendererVAAPIGL.h"
-#include "HwDecRender/RendererVDPAU.h"
+#include "RPLinuxRendererGL.h"
 #if defined(TARGET_DARWIN_OSX)
 #include "HwDecRender/RendererVTBGL.h"
 #endif
@@ -505,19 +503,7 @@ void CRPRenderManager::CreateRenderer()
 {
   if (!m_pRenderer)
   {
-    if (m_format == RP_RENDER_FMT_VAAPI)
-    {
-#if defined(HAVE_LIBVA)
-      m_pRenderer = new CRPRendererVAAPI;
-#endif
-    }
-    else if (m_format == RP_RENDER_FMT_VDPAU)
-    {
-#if defined(HAVE_LIBVDPAU)
-      m_pRenderer = new CRPRendererVDPAU;
-#endif
-    }
-    else if (m_format == RP_RENDER_FMT_CVBREF)
+    if (m_format == RP_RENDER_FMT_CVBREF)
     {
 #if defined(TARGET_DARWIN)
       m_pRenderer = new CRPRendererVTB;
@@ -564,9 +550,9 @@ void CRPRenderManager::CreateRenderer()
 #if defined(HAS_MMAL)
       m_pRenderer = new CMMALRenderer;
 #elif defined(HAS_GL)
-      m_pRenderer = new CLinuxRendererGL;
+      m_pRenderer = new CRPLinuxRendererGL;
 #elif HAS_GLES == 2
-      m_pRenderer = new CLinuxRendererGLES;
+      m_pRenderer = new CRPLinuxRendererGLES;
 #elif defined(HAS_DX)
       m_pRenderer = new CRPWinRenderer();
 #endif

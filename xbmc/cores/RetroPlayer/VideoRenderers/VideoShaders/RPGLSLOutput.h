@@ -25,11 +25,11 @@
 
 namespace Shaders
 {
-  class GLSLOutput
+  class RPGLSLOutput
   {
   public:
     // take the 1st available texture unit as a parameter
-    GLSLOutput(
+    RPGLSLOutput(
       int texunit,
       bool useDithering,
       unsigned int ditherDepth,

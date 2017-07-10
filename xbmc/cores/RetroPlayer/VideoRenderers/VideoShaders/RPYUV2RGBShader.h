@@ -32,7 +32,7 @@ void CalculateYUVMatrix(TransformMatrix &matrix
 
 #if defined(HAS_GL) || HAS_GLES == 2
 
-#include "GLSLOutput.h"
+#include "RPGLSLOutput.h"
 
 #ifndef __GNUC__
 #pragma warning( push )
@@ -71,13 +71,13 @@ namespace Shaders {
   };
 
 
-  class BaseYUV2RGBGLSLShader 
+  class RPBaseYUV2RGBGLSLShader
     : public BaseYUV2RGBShader
     , public CGLSLShaderProgram
   {
   public:
-    BaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShaderFormat format, bool stretch, GLSLOutput *output=NULL);
-   ~BaseYUV2RGBGLSLShader();
+    RPBaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShaderFormat format, bool stretch, RPGLSLOutput *output=NULL);
+   ~RPBaseYUV2RGBGLSLShader();
     virtual void SetField(int field) { m_field  = field; }
     virtual void SetWidth(int w)     { m_width  = w; }
     virtual void SetHeight(int h)    { m_height = h; }
@@ -113,7 +113,7 @@ namespace Shaders {
 
     std::string m_defines;
 
-    Shaders::GLSLOutput *m_glslOutput;
+    Shaders::RPGLSLOutput *m_RPGLSLOutput;
 
     // shader attribute handles
     GLint m_hYTex;
@@ -168,29 +168,29 @@ namespace Shaders {
     GLint m_hVTex;
   };
 
-  class YUV2RGBProgressiveShaderARB : public BaseYUV2RGBARBShader
+  class RPYUV2RGBProgressiveShaderARB : public BaseYUV2RGBARBShader
   {
   public:
-    YUV2RGBProgressiveShaderARB(bool rect=false, unsigned flags=0, ERPShaderFormat format=RP_SHADER_NONE);
+    RPYUV2RGBProgressiveShaderARB(bool rect=false, unsigned flags=0, ERPShaderFormat format=RP_SHADER_NONE);
     void OnCompiledAndLinked();
     bool OnEnabled();
   };
 #endif
 
-  class YUV2RGBProgressiveShader : public BaseYUV2RGBGLSLShader
+  class YUV2RGBProgressiveShader : public RPBaseYUV2RGBGLSLShader
   {
   public:
     YUV2RGBProgressiveShader(bool rect=false,
                              unsigned flags=0,
                              ERPShaderFormat format=RP_SHADER_NONE,
                              bool stretch = false,
-                             GLSLOutput *output=NULL);
+                             RPGLSLOutput *output=NULL);
   };
 
-  class YUV2RGBBobShader : public BaseYUV2RGBGLSLShader
+  class RPYUV2RGBBobShader : public RPBaseYUV2RGBGLSLShader
   {
   public:
-    YUV2RGBBobShader(bool rect=false, unsigned flags=0, ERPShaderFormat format=RP_SHADER_NONE);
+    RPYUV2RGBBobShader(bool rect=false, unsigned flags=0, ERPShaderFormat format=RP_SHADER_NONE);
     void OnCompiledAndLinked();
     bool OnEnabled();
 

@@ -29,7 +29,7 @@
 #include "linux/imx/IMX.h"
 #include "DVDCodecs/Video/DVDVideoCodecIMX.h"
 
-class CRPRendererIMX : public CLinuxRendererGLES
+class CRPRendererIMX : public CRPLinuxRendererGLES
 {
 public:
   CRPRendererIMX();

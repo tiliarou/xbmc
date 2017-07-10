@@ -21,7 +21,7 @@
 #include "system.h"
 
 #if defined(HAS_GL) || HAS_GLES == 2
-#include "FrameBufferObject.h"
+#include "RPFrameBufferObject.h"
 #include "windowing/WindowingFactory.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
@@ -39,10 +39,10 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////
-// CFrameBufferObject
+// CRPFrameBufferObject
 //////////////////////////////////////////////////////////////////////
 
-CFrameBufferObject::CFrameBufferObject()
+CRPFrameBufferObject::CRPFrameBufferObject()
 {
   m_fbo = 0;
   m_valid = false;
@@ -51,7 +51,7 @@ CFrameBufferObject::CFrameBufferObject()
   m_texid = 0;
 }
 
-bool CFrameBufferObject::IsSupported()
+bool CRPFrameBufferObject::IsSupported()
 {
   if(g_Windowing.IsExtSupported("GL_EXT_framebuffer_object"))
     m_supported = true;
@@ -60,7 +60,7 @@ bool CFrameBufferObject::IsSupported()
   return m_supported;
 }
 
-bool CFrameBufferObject::Initialize()
+bool CRPFrameBufferObject::Initialize()
 {
   if (!IsSupported())
     return false;
@@ -77,7 +77,7 @@ bool CFrameBufferObject::Initialize()
   return true;
 }
 
-void CFrameBufferObject::Cleanup()
+void CRPFrameBufferObject::Cleanup()
 {
   if (!IsValid())
     return;
@@ -94,7 +94,7 @@ void CFrameBufferObject::Cleanup()
   m_bound = false;
 }
 
-bool CFrameBufferObject::CreateAndBindToTexture(GLenum target, int width, int height, GLenum format, GLenum type,
+bool CRPFrameBufferObject::CreateAndBindToTexture(GLenum target, int width, int height, GLenum format, GLenum type,
                                                 GLenum filter, GLenum clampmode)
 {
   if (!IsValid())
@@ -114,14 +114,14 @@ bool CFrameBufferObject::CreateAndBindToTexture(GLenum target, int width, int he
   return BindToTexture(target, m_texid);
 }
 
-void CFrameBufferObject::SetFiltering(GLenum target, GLenum mode)
+void CRPFrameBufferObject::SetFiltering(GLenum target, GLenum mode)
 {
   glBindTexture(target, m_texid);
   glTexParameteri(target, GL_TEXTURE_MAG_FILTER, mode);
   glTexParameteri(target, GL_TEXTURE_MIN_FILTER, mode);
 }
 
-bool CFrameBufferObject::BindToTexture(GLenum target, GLuint texid)
+bool CRPFrameBufferObject::BindToTexture(GLenum target, GLuint texid)
 {
   if (!IsValid())
     return false;
@@ -143,7 +143,7 @@ bool CFrameBufferObject::BindToTexture(GLenum target, GLuint texid)
 }
 
 // Begin rendering to FBO
-bool CFrameBufferObject::BeginRender()
+bool CRPFrameBufferObject::BeginRender()
 {
   if (IsValid() && IsBound())
   {
@@ -154,7 +154,7 @@ bool CFrameBufferObject::BeginRender()
 }
 
 // Finish rendering to FBO
-void CFrameBufferObject::EndRender() const
+void CRPFrameBufferObject::EndRender() const
 {
   if (IsValid())
     glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);

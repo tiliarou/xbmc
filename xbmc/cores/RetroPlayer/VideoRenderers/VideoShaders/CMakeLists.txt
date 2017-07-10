@@ -12,11 +12,11 @@ if(CORE_SYSTEM_NAME STREQUAL windows)
 endif()
 
 if(OPENGL_FOUND OR OPENGLES_FOUND)
-  list(APPEND SOURCES GLSLOutput.cpp
-                      VideoFilterShader.cpp
+  list(APPEND SOURCES RPGLSLOutput.cpp
+                      RPVideoFilterShader.cpp
                       RPYUV2RGBShader.cpp)
-  list(APPEND HEADERS GLSLOutput.h
-                      VideoFilterShader.h
+  list(APPEND HEADERS RPGLSLOutput.h
+                      RPVideoFilterShader.h
                       RPYUV2RGBShader.h)
 endif()
 

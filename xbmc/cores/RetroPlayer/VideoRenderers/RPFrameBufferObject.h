@@ -26,14 +26,14 @@
 #include "system_gl.h"
 
 //
-// CFrameBufferObject
+// CRPFrameBufferObject
 // A class that abstracts FBOs to facilitate Render To Texture
 //
 // Requires OpenGL 1.5+ or the GL_EXT_framebuffer_object extension.
 //
 // Usage:
 //
-//     CFrameBufferObject *fbo = new CFrameBufferObject();
+//     CRPFrameBufferObject *fbo = new CRPFrameBufferObject();
 //     fbo->Initialize();
 //     fbo->CreateAndBindToTexture(GL_TEXTURE_2D, 256, 256, GL_RGBA);
 //  OR fbo->BindToTexture(GL_TEXTURE_2D, <existing texture ID>);
@@ -44,11 +44,11 @@
 //     glBindTexture(GL_TEXTURE_2D, fbo->Texture());
 //
 
-class CFrameBufferObject
+class CRPFrameBufferObject
 {
 public:
   // Constructor
-  CFrameBufferObject();
+  CRPFrameBufferObject();
 
   // returns true if FBO support is detected
   bool IsSupported();

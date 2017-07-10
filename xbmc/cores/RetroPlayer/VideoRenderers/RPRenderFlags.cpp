@@ -23,7 +23,7 @@
 #include <map>
 
 
-namespace RenderManager {
+namespace RPRenderManager {
 
   unsigned int GetFlagsColorMatrix(unsigned int color_matrix, unsigned width, unsigned height)
   {

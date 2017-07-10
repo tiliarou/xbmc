@@ -27,20 +27,20 @@
 
 #include "system_gl.h"
 
-#include "FrameBufferObject.h"
+#include "RPFrameBufferObject.h"
 #include "guilib/Shader.h"
 #include "settings/VideoSettings.h"
 #include "RPRenderFlags.h"
 #include "RPRenderFormats.h"
 #include "guilib/GraphicContext.h"
 #include "RPBaseRenderer.h"
-#include "cores/ColorManager.h"
+#include <xbmc/cores/VideoPlayer/VideoRenderers/ColorManager.h>
 #include "threads/Event.h"
 #include "VideoShaders/ShaderFormats.h"
 
 class CBaseTexture;
 namespace Shaders { class BaseYUV2RGBShader; }
-namespace Shaders { class BaseVideoFilterShader; }
+namespace Shaders { class RPBaseVideoFilterShader; }
 
 #undef ALIGN
 #define ALIGN(value, alignment) (((value)+((alignment)-1))&~((alignment)-1))
@@ -109,11 +109,11 @@ extern YUVCOEF yuv_coef_bt709;
 extern YUVCOEF yuv_coef_ebu;
 extern YUVCOEF yuv_coef_smtp240m;
 
-class CLinuxRendererGL : public CRPBaseRenderer
+class CRPLinuxRendererGL : public CRPBaseRenderer
 {
 public:
-  CLinuxRendererGL();
-  virtual ~CLinuxRendererGL();
+  CRPLinuxRendererGL();
+  virtual ~CRPLinuxRendererGL();
 
   // Player functions
   virtual bool Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void *hwPic, unsigned int orientation);
@@ -181,7 +181,7 @@ protected:
 
   struct
   {
-    CFrameBufferObject fbo;
+    CRPFrameBufferObject fbo;
     float width, height;
   } m_fbo;
 
@@ -251,7 +251,7 @@ protected:
   void GetPlaneTextureSize(YUVPLANE& plane);
 
   Shaders::BaseYUV2RGBShader *m_pYUVShader;
-  Shaders::BaseVideoFilterShader *m_pVideoFilterShader;
+  Shaders::RPBaseVideoFilterShader *m_pVideoFilterShader;
   ESCALINGMETHOD m_scalingMethod;
   ESCALINGMETHOD m_scalingMethodGui;
   bool m_useDithering;

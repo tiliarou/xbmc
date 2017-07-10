@@ -39,9 +39,9 @@ struct RPVideoPicture;
 
 class CRPWinRenderer;
 class CMMALRenderer;
-class CLinuxRenderer;
-class CLinuxRendererGL;
-class CLinuxRendererGLES;
+class CRPLinuxRenderer;
+class CRPLinuxRendererGL;
+class CRPLinuxRendererGLES;
 class CRPRenderManager;
 
 class IRetroPlayerRenderMsg

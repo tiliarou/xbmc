@@ -26,7 +26,7 @@
 
 #include "cores/RetroPlayer/VideoRenderers/LinuxRendererGLES.h"
 
-class CRPRendererMediaCodec : public CLinuxRendererGLES
+class CRPRendererMediaCodec : public CRPLinuxRendererGLES
 {
 public:
   CRPRendererMediaCodec();

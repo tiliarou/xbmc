@@ -23,12 +23,12 @@
 #include "system_gl.h"
 #include "utils/log.h"
 
-#include "GLSLOutput.h"
+#include "RPGLSLOutput.h"
 #include "dither.h"
 
 using namespace Shaders;
 
-GLSLOutput::GLSLOutput(int texunit, bool useDithering, unsigned int ditherDepth, bool fullrange, GLuint clutTex, int clutSize)
+RPGLSLOutput::RPGLSLOutput(int texunit, bool useDithering, unsigned int ditherDepth, bool fullrange, GLuint clutTex, int clutSize)
 {
   // set member variable initial values
   m_1stTexUnit = texunit;
@@ -55,7 +55,7 @@ GLSLOutput::GLSLOutput(int texunit, bool useDithering, unsigned int ditherDepth,
   m_uCLUTSize = clutSize;
 }
 
-std::string GLSLOutput::GetDefines()
+std::string RPGLSLOutput::GetDefines()
 {
   std::string defines;
   if (m_dither)
@@ -69,7 +69,7 @@ std::string GLSLOutput::GetDefines()
   return defines;
 }
 
-void GLSLOutput::OnCompiledAndLinked(GLuint programHandle)
+void RPGLSLOutput::OnCompiledAndLinked(GLuint programHandle)
 {
   FreeTextures();
 
@@ -124,7 +124,7 @@ void GLSLOutput::OnCompiledAndLinked(GLuint programHandle)
   VerifyGLState();
 }
 
-bool GLSLOutput::OnEnabled()
+bool RPGLSLOutput::OnEnabled()
 {
 
   if (m_dither)
@@ -166,7 +166,7 @@ bool GLSLOutput::OnEnabled()
   return true;
 }
 
-void GLSLOutput::OnDisabled()
+void RPGLSLOutput::OnDisabled()
 {
   // disable textures
   if (m_dither)
@@ -185,12 +185,12 @@ void GLSLOutput::OnDisabled()
   VerifyGLState();
 }
 
-void GLSLOutput::Free()
+void RPGLSLOutput::Free()
 {
   FreeTextures();
 }
 
-void GLSLOutput::FreeTextures()
+void RPGLSLOutput::FreeTextures()
 {
   if (m_tDitherTex)
   {

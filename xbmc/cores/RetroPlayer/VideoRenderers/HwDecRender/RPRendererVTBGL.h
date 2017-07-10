@@ -25,7 +25,7 @@
 #include "cores/RetroPlayer/VideoRenderers/LinuxRendererGL.h"
 
 
-class CRPRendererVTB : public CLinuxRendererGL
+class CRPRendererVTB : public CRPLinuxRendererGL
 {
 public:
   CRPRendererVTB();

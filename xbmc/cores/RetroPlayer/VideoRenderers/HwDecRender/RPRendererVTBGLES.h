@@ -27,7 +27,7 @@
 #include "cores/RetroPlayer/VideoRenderers/LinuxRendererGLES.h"
 #include <CoreVideo/CVOpenGLESTextureCache.h>
 
-class CRPRendererVTB : public CLinuxRendererGLES
+class CRPRendererVTB : public CRPLinuxRendererGLES
 {
 public:
   CRPRendererVTB();

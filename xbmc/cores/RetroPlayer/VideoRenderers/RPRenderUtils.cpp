@@ -20,13 +20,12 @@
 
 #include "RPRenderUtils.h"
 #include "RPVideoPicture.h"
-#include "utils/win32/Win32Log.h"
+#include <xbmc/utils/log.h>
 #include "RPRenderManager.h"
 
 extern "C" {
 #include <libavformat/avio.h>
 }
-
 
 RPVideoPicture* RPRenderUtils::AllocatePicture(int iWidth, int iHeight)
 {

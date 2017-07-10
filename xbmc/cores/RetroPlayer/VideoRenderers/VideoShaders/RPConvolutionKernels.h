@@ -24,11 +24,11 @@
 #include "system.h"
 #include "settings/VideoSettings.h"
 
-class CConvolutionKernel
+class CRPConvolutionKernel
 {
   public:
-    CConvolutionKernel(ESCALINGMETHOD method, int size);
-    ~CConvolutionKernel();
+    CRPConvolutionKernel(ESCALINGMETHOD method, int size);
+    ~CRPConvolutionKernel();
 
     int      GetSize()           { return m_size; }
     float*   GetFloatPixels()    { return m_floatpixels; }
@@ -36,8 +36,8 @@ class CConvolutionKernel
     uint8_t* GetUint8Pixels()    { return m_uint8pixels; }
 
   private:
-    CConvolutionKernel(const CConvolutionKernel&);
-    CConvolutionKernel& operator=(const CConvolutionKernel&);
+    CRPConvolutionKernel(const CRPConvolutionKernel&);
+    CRPConvolutionKernel& operator=(const CRPConvolutionKernel&);
     void Lanczos2();
     void Lanczos3Fast();
     void Lanczos3();

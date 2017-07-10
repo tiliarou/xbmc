@@ -62,7 +62,7 @@ static PFNEGLCLIENTWAITSYNCKHRPROC eglClientWaitSyncKHR;
 
 using namespace Shaders;
 
-CLinuxRendererGLES::YUVBufferYUVBufferRP()
+CRPLinuxRendererGLES::YUVBufferYUVBufferRP()
 {
   memset(&fields, 0, sizeof(fields));
   memset(&image , 0, sizeof(image));
@@ -70,11 +70,11 @@ CLinuxRendererGLES::YUVBufferYUVBufferRP()
   hwDec = NULL;
 }
 
-CLinuxRendererGLES::YUVBuffer~YUVBufferRP()
+CRPLinuxRendererGLES::YUVBuffer~YUVBufferRP()
 {
 }
 
-CLinuxRendererGLES::CLinuxRendererGLES()
+CRPLinuxRendererGLES::CRPLinuxRendererGLES()
 {
   m_textureTarget = GL_TEXTURE_2D;
 
@@ -119,7 +119,7 @@ CLinuxRendererGLES::CLinuxRendererGLES()
 #endif
 }
 
-CLinuxRendererGLES::~CLinuxRendererGLES()
+CRPLinuxRendererGLES::~CRPLinuxRendererGLES()
 {
   UnInit();
 
@@ -131,7 +131,7 @@ CLinuxRendererGLES::~CLinuxRendererGLES()
   ReleaseShaders();
 }
 
-bool CLinuxRendererGLES::ValidateRenderTarget()
+bool CRPLinuxRendererGLES::ValidateRenderTarget()
 {
   if (!m_bValidated)
   {
@@ -158,7 +158,7 @@ bool CLinuxRendererGLES::ValidateRenderTarget()
   return false;
 }
 
-bool CLinuxRendererGLES::Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void* hwPic, unsigned int orientation)
+bool CRPLinuxRendererGLES::Configure(unsigned int width, unsigned int height, unsigned int d_width, unsigned int d_height, float fps, unsigned flags, ERPRenderFormat format, void* hwPic, unsigned int orientation)
 {
   m_sourceWidth = width;
   m_sourceHeight = height;
@@ -189,12 +189,12 @@ bool CLinuxRendererGLES::Configure(unsigned int width, unsigned int height, unsi
   return true;
 }
 
-int CLinuxRendererGLES::NextYV12Texture()
+int CRPLinuxRendererGLES::NextYV12Texture()
 {
   return (m_iYV12RenderBuffer + 1) % m_NumYV12Buffers;
 }
 
-int CLinuxRendererGLES::GetImage(YV12ImageRP *image, int source, bool readonly)
+int CRPLinuxRendererGLES::GetImage(YV12ImageRP *image, int source, bool readonly)
 {
   if (!image)
     return -1;
@@ -216,7 +216,7 @@ int CLinuxRendererGLES::GetImage(YV12ImageRP *image, int source, bool readonly)
 
   if ((im.flags&(~IMAGE_FLAG_READY)) != 0)
   {
-     CLog::Log(LOGDEBUG, "CLinuxRenderer::GetImage - request image but none to give");
+     CLog::Log(LOGDEBUG, "CRPLinuxRenderer::GetImage - request image but none to give");
      return -1;
   }
 
@@ -241,7 +241,7 @@ int CLinuxRendererGLES::GetImage(YV12ImageRP *image, int source, bool readonly)
   return source;
 }
 
-void CLinuxRendererGLES::ReleaseImage(int source, bool preserve)
+void CRPLinuxRendererGLES::ReleaseImage(int source, bool preserve)
 {
   YV12ImageRP &im = m_buffers[source].image;
 
@@ -255,7 +255,7 @@ void CLinuxRendererGLES::ReleaseImage(int source, bool preserve)
   m_bImageReady = true;
 }
 
-void CLinuxRendererGLES::CalculateTextureSourceRects(int source, int num_planes)
+void CRPLinuxRendererGLES::CalculateTextureSourceRects(int source, int num_planes)
 {
   YUVBufferRP& buf    =  m_buffers[source];
   YV12ImageRP* im     = &buf.image;
@@ -328,7 +328,7 @@ void CLinuxRendererGLES::CalculateTextureSourceRects(int source, int num_planes)
   }
 }
 
-void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipindex
+void CRPLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipindex
                                 , unsigned width, unsigned height
                                 , unsigned int stride, int bpp, void* data )
 {
@@ -375,7 +375,7 @@ void CLinuxRendererGLES::LoadPlane( YUVPLANE& plane, int type, unsigned flipinde
   plane.flipindex = flipindex;
 }
 
-void CLinuxRendererGLES::Reset()
+void CRPLinuxRendererGLES::Reset()
 {
   for(int i=0; i<m_NumYV12Buffers; i++)
   {
@@ -384,7 +384,7 @@ void CLinuxRendererGLES::Reset()
   }
 }
 
-void CLinuxRendererGLES::Flush()
+void CRPLinuxRendererGLES::Flush()
 {
   if (!m_bValidated)
     return;
@@ -400,7 +400,7 @@ void CLinuxRendererGLES::Flush()
   m_iYV12RenderBuffer = 0;
 }
 
-void CLinuxRendererGLES::Update()
+void CRPLinuxRendererGLES::Update()
 {
   if (!m_bConfigured)
     return;
@@ -408,7 +408,7 @@ void CLinuxRendererGLES::Update()
   ValidateRenderTarget();
 }
 
-void CLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
+void CRPLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
 {
   if (!m_bConfigured)
     return;
@@ -475,7 +475,7 @@ void CLinuxRendererGLES::RenderUpdate(bool clear, DWORD flags, DWORD alpha)
   glEnable(GL_BLEND);
 }
 
-void CLinuxRendererGLES::RenderUpdateVideo(bool clear, DWORD flags, DWORD alpha)
+void CRPLinuxRendererGLES::RenderUpdateVideo(bool clear, DWORD flags, DWORD alpha)
 {
   if (!m_bConfigured)
     return;
@@ -493,7 +493,7 @@ void CLinuxRendererGLES::RenderUpdateVideo(bool clear, DWORD flags, DWORD alpha)
   }
 }
 
-void CLinuxRendererGLES::FlipPage(int source)
+void CRPLinuxRendererGLES::FlipPage(int source)
 {
   if( source >= 0 && source < m_NumYV12Buffers )
     m_iYV12RenderBuffer = source;
@@ -505,7 +505,7 @@ void CLinuxRendererGLES::FlipPage(int source)
   return;
 }
 
-void CLinuxRendererGLES::PreInit()
+void CRPLinuxRendererGLES::PreInit()
 {
   CSingleLock lock(g_graphicsContext);
   m_bConfigured = false;
@@ -524,7 +524,7 @@ void CLinuxRendererGLES::PreInit()
   m_clearColour = g_Windowing.UseLimitedColor() ? (16.0f / 0xff) : 0.0f;
 }
 
-void CLinuxRendererGLES::UpdateVideoFilter()
+void CRPLinuxRendererGLES::UpdateVideoFilter()
 {
   if (m_scalingMethodGui == CMediaSettings::GetInstance().GetCurrentVideoSettings().m_ScalingMethod)
     return;
@@ -533,7 +533,7 @@ void CLinuxRendererGLES::UpdateVideoFilter()
 
   if(!Supports(m_scalingMethod))
   {
-    CLog::Log(LOGWARNING, "CLinuxRendererGLES::UpdateVideoFilter - chosen scaling method %d, is not supported by renderer", (int)m_scalingMethod);
+    CLog::Log(LOGWARNING, "CRPLinuxRendererGLES::UpdateVideoFilter - chosen scaling method %d, is not supported by renderer", (int)m_scalingMethod);
     m_scalingMethod = VS_SCALINGMETHOD_LINEAR;
   }
 
@@ -587,7 +587,7 @@ void CLinuxRendererGLES::UpdateVideoFilter()
   m_renderQuality = RQ_SINGLEPASS;
 }
 
-void CLinuxRendererGLES::LoadShaders(int field)
+void CRPLinuxRendererGLES::LoadShaders(int field)
 {
   m_reloadShaders = 0;
 
@@ -617,7 +617,7 @@ void CLinuxRendererGLES::LoadShaders(int field)
 
           ERPShaderFormat shaderFormat = GetShaderFormat(m_format);
           m_pYUVProgShader = new YUV2RGBProgressiveShader(false, m_iFlags, shaderFormat);
-          m_pYUVBobShader = new YUV2RGBBobShader(false, m_iFlags, shaderFormat);
+          m_pYUVBobShader = new RPYUV2RGBBobShader(false, m_iFlags, shaderFormat);
           if ((m_pYUVProgShader && m_pYUVProgShader->CompileAndLink())
               && (m_pYUVBobShader && m_pYUVBobShader->CompileAndLink()))
           {
@@ -653,13 +653,13 @@ void CLinuxRendererGLES::LoadShaders(int field)
 
   if (m_oldRenderMethod != m_renderMethod)
   {
-    CLog::Log(LOGDEBUG, "CLinuxRendererGLES: Reorder drawpoints due to method change from %i to %i", m_oldRenderMethod, m_renderMethod);
+    CLog::Log(LOGDEBUG, "CRPLinuxRendererGLES: Reorder drawpoints due to method change from %i to %i", m_oldRenderMethod, m_renderMethod);
     ReorderDrawPoints();
     m_oldRenderMethod = m_renderMethod;
   }
 }
 
-void CLinuxRendererGLES::ReleaseShaders()
+void CRPLinuxRendererGLES::ReleaseShaders()
 {
   if (m_pYUVProgShader)
   {
@@ -675,7 +675,7 @@ void CLinuxRendererGLES::ReleaseShaders()
   }
 }
 
-void CLinuxRendererGLES::UnInit()
+void CRPLinuxRendererGLES::UnInit()
 {
   CLog::Log(LOGDEBUG, "LinuxRendererGL: Cleaning up GL resources");
   CSingleLock lock(g_graphicsContext);
@@ -704,12 +704,12 @@ void CLinuxRendererGLES::UnInit()
   m_bConfigured = false;
 }
 
-inline void CLinuxRendererGLES::ReorderDrawPoints()
+inline void CRPLinuxRendererGLES::ReorderDrawPoints()
 {
   CRPBaseRenderer::ReorderDrawPoints();//call base impl. for rotating the points
 }
 
-bool CLinuxRendererGLES::CreateTexture(int index)
+bool CRPLinuxRendererGLES::CreateTexture(int index)
 {
   if (m_format == RP_RENDER_FMT_BYPASS)
   {
@@ -731,7 +731,7 @@ bool CLinuxRendererGLES::CreateTexture(int index)
   return false;
 }
 
-void CLinuxRendererGLES::DeleteTexture(int index)
+void CRPLinuxRendererGLES::DeleteTexture(int index)
 {
   if (m_format == RP_RENDER_FMT_BYPASS)
   {
@@ -748,7 +748,7 @@ void CLinuxRendererGLES::DeleteTexture(int index)
   }
 }
 
-bool CLinuxRendererGLES::UploadTexture(int index)
+bool CRPLinuxRendererGLES::UploadTexture(int index)
 {
   // Now that we now the render method, setup texture function handlers
   if (m_format == RP_RENDER_FMT_BYPASS)
@@ -770,7 +770,7 @@ bool CLinuxRendererGLES::UploadTexture(int index)
   return false;
 }
 
-void CLinuxRendererGLES::Render(DWORD flags, int index)
+void CRPLinuxRendererGLES::Render(DWORD flags, int index)
 {
   // If rendered directly by the hardware
   if (m_renderMethod & RENDER_BYPASS)
@@ -816,7 +816,7 @@ void CLinuxRendererGLES::Render(DWORD flags, int index)
   AfterRenderHook(index);
 }
 
-void CLinuxRendererGLES::RenderSinglePass(int index, int field)
+void CRPLinuxRendererGLES::RenderSinglePass(int index, int field)
 {
   YV12ImageRP &im     = m_buffers[index].image;
   YUVFIELDS &fields = m_buffers[index].fields;
@@ -927,7 +927,7 @@ void CLinuxRendererGLES::RenderSinglePass(int index, int field)
   VerifyGLState();
 }
 
-void CLinuxRendererGLES::RenderMultiPass(int index, int field)
+void CRPLinuxRendererGLES::RenderMultiPass(int index, int field)
 {
   //! @todo Multipass rendering does not currently work! FIX!
   CLog::Log(LOGERROR, "GLES: MULTIPASS rendering was called! But it doesnt work!!!");
@@ -1114,7 +1114,7 @@ void CLinuxRendererGLES::RenderMultiPass(int index, int field)
 //********************************************************************************************************
 // YV12 Texture creation, deletion, copying + clearing
 //********************************************************************************************************
-void CLinuxRendererGLES::UploadYV12Texture(int source)
+void CRPLinuxRendererGLES::UploadYV12Texture(int source)
 {
   YUVBufferRP& buf    =  m_buffers[source];
   YV12ImageRP* im     = &buf.image;
@@ -1153,7 +1153,7 @@ void CLinuxRendererGLES::UploadYV12Texture(int source)
   glDisable(m_textureTarget);
 }
 
-void CLinuxRendererGLES::DeleteYV12Texture(int index)
+void CRPLinuxRendererGLES::DeleteYV12Texture(int index)
 {
   YV12ImageRP &im     = m_buffers[index].image;
   YUVFIELDS &fields = m_buffers[index].fields;
@@ -1203,7 +1203,7 @@ static GLint GetInternalFormat(GLint format, int bpp)
     return format;
 }
 
-bool CLinuxRendererGLES::CreateYV12Texture(int index)
+bool CRPLinuxRendererGLES::CreateYV12Texture(int index)
 {
   /* since we also want the field textures, pitch must be texture aligned */
   YV12ImageRP &im     = m_buffers[index].image;
@@ -1313,7 +1313,7 @@ bool CLinuxRendererGLES::CreateYV12Texture(int index)
 //********************************************************************************************************
 // NV12 Texture loading, creation and deletion
 //********************************************************************************************************
-bool CLinuxRendererGLES::UploadNV12Texture(int source)
+bool CRPLinuxRendererGLES::UploadNV12Texture(int source)
 {
   YUVBufferRP& buf    =  m_buffers[source];
   YV12ImageRP* im     = &buf.image;
@@ -1376,7 +1376,7 @@ bool CLinuxRendererGLES::UploadNV12Texture(int source)
   return true;
 }
 
-bool CLinuxRendererGLES::CreateNV12Texture(int index)
+bool CRPLinuxRendererGLES::CreateNV12Texture(int index)
 {
   // since we also want the field textures, pitch must be texture aligned
   YV12ImageRP &im     = m_buffers[index].image;
@@ -1476,7 +1476,7 @@ bool CLinuxRendererGLES::CreateNV12Texture(int index)
 
   return true;
 }
-void CLinuxRendererGLES::DeleteNV12Texture(int index)
+void CRPLinuxRendererGLES::DeleteNV12Texture(int index)
 {
   YV12ImageRP &im     = m_buffers[index].image;
   YUVFIELDS &fields = m_buffers[index].fields;
@@ -1513,13 +1513,13 @@ void CLinuxRendererGLES::DeleteNV12Texture(int index)
 //********************************************************************************************************
 // BYPASS creation, deletion, copying + clearing
 //********************************************************************************************************
-void CLinuxRendererGLES::UploadBYPASSTexture(int index)
+void CRPLinuxRendererGLES::UploadBYPASSTexture(int index)
 {
 }
-void CLinuxRendererGLES::DeleteBYPASSTexture(int index)
+void CRPLinuxRendererGLES::DeleteBYPASSTexture(int index)
 {
 }
-bool CLinuxRendererGLES::CreateBYPASSTexture(int index)
+bool CRPLinuxRendererGLES::CreateBYPASSTexture(int index)
 {
   return true;
 }
@@ -1527,7 +1527,7 @@ bool CLinuxRendererGLES::CreateBYPASSTexture(int index)
 //********************************************************************************************************
 // SurfaceTexture creation, deletion, copying + clearing
 //********************************************************************************************************
-void CLinuxRendererGLES::SetTextureFilter(GLenum method)
+void CRPLinuxRendererGLES::SetTextureFilter(GLenum method)
 {
   for (int i = 0 ; i<m_NumYV12Buffers ; i++)
   {
@@ -1553,7 +1553,7 @@ void CLinuxRendererGLES::SetTextureFilter(GLenum method)
   }
 }
 
-bool CLinuxRendererGLES::Supports(ERENDERFEATURE feature)
+bool CRPLinuxRendererGLES::Supports(ERENDERFEATURE feature)
 {
   if(feature == RENDERFEATURE_BRIGHTNESS)
     return true;
@@ -1585,12 +1585,12 @@ bool CLinuxRendererGLES::Supports(ERENDERFEATURE feature)
   return false;
 }
 
-bool CLinuxRendererGLES::SupportsMultiPassRendering()
+bool CRPLinuxRendererGLES::SupportsMultiPassRendering()
 {
   return false;
 }
 
-bool CLinuxRendererGLES::Supports(ESCALINGMETHOD method)
+bool CRPLinuxRendererGLES::Supports(ESCALINGMETHOD method)
 {
   if(method == VS_SCALINGMETHOD_NEAREST
   || method == VS_SCALINGMETHOD_LINEAR)
@@ -1599,7 +1599,7 @@ bool CLinuxRendererGLES::Supports(ESCALINGMETHOD method)
   return false;
 }
 
-CRPRenderInfo CLinuxRendererGLES::GetRenderInfo()
+CRPRenderInfo CRPLinuxRendererGLES::GetRenderInfo()
 {
   CRPRenderInfo info;
   info.formats = m_formats;
@@ -1608,7 +1608,7 @@ CRPRenderInfo CLinuxRendererGLES::GetRenderInfo()
   return info;
 }
 
-bool CLinuxRendererGLES::IsGuiLayer()
+bool CRPLinuxRendererGLES::IsGuiLayer()
 {
   if (m_format == RP_RENDER_FMT_BYPASS)
     return false;

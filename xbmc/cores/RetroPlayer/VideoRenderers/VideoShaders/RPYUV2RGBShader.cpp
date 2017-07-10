@@ -163,11 +163,11 @@ static void CalculateYUVMatrixGL(GLfloat      res[4][4]
 }
 
 //////////////////////////////////////////////////////////////////////
-// BaseYUV2RGBGLSLShader - base class for GLSL YUV2RGB shaders
+// RPBaseYUV2RGBGLSLShader - base class for GLSL YUV2RGB shaders
 //////////////////////////////////////////////////////////////////////
 
-BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShaderFormat format, bool stretch,
-                                             GLSLOutput *output)
+RPBaseYUV2RGBGLSLShader::RPBaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShaderFormat format, bool stretch,
+                                             RPGLSLOutput *output)
 {
   m_width      = 1;
   m_height     = 1;
@@ -188,9 +188,9 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShade
   m_hStep    = -1;
 
   // get defines from the output stage if used
-  m_glslOutput = output;
-  if (m_glslOutput) {
-    m_defines += m_glslOutput->GetDefines();
+  m_RPGLSLOutput = output;
+  if (m_RPGLSLOutput) {
+    m_defines += m_RPGLSLOutput->GetDefines();
   }
 
 #ifdef HAS_GL
@@ -225,7 +225,7 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShade
   else if (m_format == RP_SHADER_YV12)
     m_defines += "#define XBMC_YV12\n";
   else
-    CLog::Log(LOGERROR, "GL: BaseYUV2RGBGLSLShader - unsupported format %d", m_format);
+    CLog::Log(LOGERROR, "GL: RPBaseYUV2RGBGLSLShader - unsupported format %d", m_format);
 
   VertexShader()->LoadSource("yuv2rgb_vertex.glsl", m_defines);
 #elif HAS_GLES == 2
@@ -245,20 +245,20 @@ BaseYUV2RGBGLSLShader::BaseYUV2RGBGLSLShader(bool rect, unsigned flags, ERPShade
   else if (m_format == RP_SHADER_YV12)
     m_defines += "#define XBMC_YV12\n";
   else
-    CLog::Log(LOGERROR, "GL: BaseYUV2RGBGLSLShader - unsupported format %d", m_format);
+    CLog::Log(LOGERROR, "GL: RPBaseYUV2RGBGLSLShader - unsupported format %d", m_format);
 
   VertexShader()->LoadSource("yuv2rgb_vertex_gles.glsl", m_defines);
 #endif
 
-  CLog::Log(LOGDEBUG, "GL: BaseYUV2RGBGLSLShader: defines:\n%s", m_defines.c_str());
+  CLog::Log(LOGDEBUG, "GL: RPBaseYUV2RGBGLSLShader: defines:\n%s", m_defines.c_str());
 }
 
-BaseYUV2RGBGLSLShader::~BaseYUV2RGBGLSLShader()
+RPBaseYUV2RGBGLSLShader::~RPBaseYUV2RGBGLSLShader()
 {
-  delete m_glslOutput;
+  delete m_RPGLSLOutput;
 }
 
-void BaseYUV2RGBGLSLShader::OnCompiledAndLinked()
+void RPBaseYUV2RGBGLSLShader::OnCompiledAndLinked()
 {
 #if HAS_GLES == 2
   m_hVertex = glGetAttribLocation(ProgramHandle(),  "m_attrpos");
@@ -277,10 +277,10 @@ void BaseYUV2RGBGLSLShader::OnCompiledAndLinked()
   m_hStep    = glGetUniformLocation(ProgramHandle(), "m_step");
   VerifyGLState();
 
-  if (m_glslOutput) m_glslOutput->OnCompiledAndLinked(ProgramHandle());
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnCompiledAndLinked(ProgramHandle());
 }
 
-bool BaseYUV2RGBGLSLShader::OnEnabled()
+bool RPBaseYUV2RGBGLSLShader::OnEnabled()
 {
   // set shader attributes once enabled
   glUniform1i(m_hYTex, 0);
@@ -300,21 +300,21 @@ bool BaseYUV2RGBGLSLShader::OnEnabled()
   glUniform1f(m_hAlpha, m_alpha);
 #endif
   VerifyGLState();
-  if (m_glslOutput) m_glslOutput->OnEnabled();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnEnabled();
   return true;
 }
 
-void BaseYUV2RGBGLSLShader::OnDisabled()
+void RPBaseYUV2RGBGLSLShader::OnDisabled()
 {
-  if (m_glslOutput) m_glslOutput->OnDisabled();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->OnDisabled();
 }
 
-void BaseYUV2RGBGLSLShader::Free()
+void RPBaseYUV2RGBGLSLShader::Free()
 {
-  if (m_glslOutput) m_glslOutput->Free();
+  if (m_RPGLSLOutput) m_RPGLSLOutput->Free();
 }
 //////////////////////////////////////////////////////////////////////
-// BaseYUV2RGBGLSLShader - base class for GLSL YUV2RGB shaders
+// RPBaseYUV2RGBGLSLShader - base class for GLSL YUV2RGB shaders
 //////////////////////////////////////////////////////////////////////
 #if HAS_GLES != 2	// No ARB Shader when using GLES2.0
 BaseYUV2RGBARBShader::BaseYUV2RGBARBShader(unsigned flags, ERPShaderFormat format)
@@ -338,8 +338,8 @@ BaseYUV2RGBARBShader::BaseYUV2RGBARBShader(unsigned flags, ERPShaderFormat forma
 //////////////////////////////////////////////////////////////////////
 
 YUV2RGBProgressiveShader::YUV2RGBProgressiveShader(bool rect, unsigned flags, ERPShaderFormat format, bool stretch,
-                                                   GLSLOutput *output)
-  : BaseYUV2RGBGLSLShader(rect, flags, format, stretch, output)
+                                                   RPGLSLOutput *output)
+  : RPBaseYUV2RGBGLSLShader(rect, flags, format, stretch, output)
 {
 #ifdef HAS_GL
   PixelShader()->LoadSource("yuv2rgb_basic.glsl", m_defines);
@@ -351,11 +351,11 @@ YUV2RGBProgressiveShader::YUV2RGBProgressiveShader(bool rect, unsigned flags, ER
 
 
 //////////////////////////////////////////////////////////////////////
-// YUV2RGBBobShader - YUV2RGB with Bob deinterlacing
+// RPYUV2RGBBobShader - YUV2RGB with Bob deinterlacing
 //////////////////////////////////////////////////////////////////////
 
-YUV2RGBBobShader::YUV2RGBBobShader(bool rect, unsigned flags, ERPShaderFormat format)
-  : BaseYUV2RGBGLSLShader(rect, flags, format, false)
+RPYUV2RGBBobShader::RPYUV2RGBBobShader(bool rect, unsigned flags, ERPShaderFormat format)
+  : RPBaseYUV2RGBGLSLShader(rect, flags, format, false)
 {
   m_hStepX = -1;
   m_hStepY = -1;
@@ -367,18 +367,18 @@ YUV2RGBBobShader::YUV2RGBBobShader(bool rect, unsigned flags, ERPShaderFormat fo
 #endif
 }
 
-void YUV2RGBBobShader::OnCompiledAndLinked()
+void RPYUV2RGBBobShader::OnCompiledAndLinked()
 {
-  BaseYUV2RGBGLSLShader::OnCompiledAndLinked();
+  RPBaseYUV2RGBGLSLShader::OnCompiledAndLinked();
   m_hStepX = glGetUniformLocation(ProgramHandle(), "m_stepX");
   m_hStepY = glGetUniformLocation(ProgramHandle(), "m_stepY");
   m_hField = glGetUniformLocation(ProgramHandle(), "m_field");
   VerifyGLState();
 }
 
-bool YUV2RGBBobShader::OnEnabled()
+bool RPYUV2RGBBobShader::OnEnabled()
 {
-  if(!BaseYUV2RGBGLSLShader::OnEnabled())
+  if(!RPBaseYUV2RGBGLSLShader::OnEnabled())
     return false;
 
   glUniform1i(m_hField, m_field);
@@ -389,10 +389,10 @@ bool YUV2RGBBobShader::OnEnabled()
 }
 
 //////////////////////////////////////////////////////////////////////
-// YUV2RGBProgressiveShaderARB - YUV2RGB with no deinterlacing
+// RPYUV2RGBProgressiveShaderARB - YUV2RGB with no deinterlacing
 //////////////////////////////////////////////////////////////////////
 #if HAS_GLES != 2	// No ARB Shader when using GLES2.0
-YUV2RGBProgressiveShaderARB::YUV2RGBProgressiveShaderARB(bool rect, unsigned flags, ERPShaderFormat format)
+RPYUV2RGBProgressiveShaderARB::RPYUV2RGBProgressiveShaderARB(bool rect, unsigned flags, ERPShaderFormat format)
   : BaseYUV2RGBARBShader(flags, format)
 {
   m_black      = 0.0f;
@@ -422,16 +422,16 @@ YUV2RGBProgressiveShaderARB::YUV2RGBProgressiveShaderARB(bool rect, unsigned fla
       shaderfile = "yuv2rgb_basic_2d.arb";
   }
 
-  CLog::Log(LOGDEBUG, "GL: YUV2RGBProgressiveShaderARB: loading %s", shaderfile.c_str());
+  CLog::Log(LOGDEBUG, "GL: RPYUV2RGBProgressiveShaderARB: loading %s", shaderfile.c_str());
 
   PixelShader()->LoadSource(shaderfile);
 }
 
-void YUV2RGBProgressiveShaderARB::OnCompiledAndLinked()
+void RPYUV2RGBProgressiveShaderARB::OnCompiledAndLinked()
 {
 }
 
-bool YUV2RGBProgressiveShaderARB::OnEnabled()
+bool RPYUV2RGBProgressiveShaderARB::OnEnabled()
 {
   GLfloat matrix[4][4];
   CalculateYUVMatrixGL(matrix, m_flags, m_format, m_black, m_contrast, !m_convertFullRange);
