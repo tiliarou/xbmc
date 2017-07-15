@@ -305,13 +305,14 @@ void CRPWinRenderer::AddRPVideoPictureHW(RPVideoPicture &picture, int index)
     buf->pictureFlags = picture.iFlags;
     m_frameIdx += 2;
   }
-  else */ if (picture.format == RP_RENDER_FMT_DXVA)
+  else if (picture.format == RP_RENDER_FMT_DXVA)
   {
     YUVBufferRP *buf = reinterpret_cast<YUVBufferRP*>(m_VideoBuffers[index]);
     if (buf->IsReadyToRender())
       return;
     buf->CopyFromPicture(picture);
   }
+  */
 }
 
 int CRPWinRenderer::GetImage(YV12ImageRP *image, int source, bool readonly)
@@ -816,7 +817,8 @@ void CRPWinRenderer::RenderPS()
   CD3D11_VIEWPORT viewPort(0.0f, 0.0f, 0.0f, 0.0f);
   ID3D11DeviceContext* pContext = g_Windowing.Get3D11Context();
 
-  ID3D11RenderTargetView *oldRTView = nullptr; ID3D11DepthStencilView* oldDSView = nullptr;
+  ID3D11RenderTargetView *oldRTView = nullptr;
+  ID3D11DepthStencilView* oldDSView = nullptr;
   if (m_bUseHQScaler)
   {
     // store current render target and depth view.
