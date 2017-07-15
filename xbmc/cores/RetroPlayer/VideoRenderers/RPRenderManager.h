@@ -47,7 +47,7 @@ class CRPRenderManager;
 class IRetroPlayerRenderMsg
 {
   friend CRPRenderManager;
-protected:
+public:
   virtual void VideoParamsChange() = 0;
   virtual void GetDebugInfo(std::string &audio, std::string &video, std::string &general) = 0;
   virtual void UpdateClockSync(bool enabled) = 0;

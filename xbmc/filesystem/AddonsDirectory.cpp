@@ -142,7 +142,8 @@ static bool IsGameSupportAddon(const AddonPtr& addon)
 {
   return addon->Type() == ADDON_GAMEDLL &&
          !std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsPath() &&
-         !std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone();
+         !std::static_pointer_cast<GAME::CGameClient>(addon)->SupportsStandalone() ||
+         addon->Type() == ADDON_SHADERDLL;
 }
 
 static bool IsGameAddon(const AddonPtr& addon)

@@ -1,4 +1,5 @@
 /*
+ *      Copyright (C) 2017 Nick Renieris
  *      Copyright (C) 2005-2013 Team XBMC
  *      http://xbmc.org
  *

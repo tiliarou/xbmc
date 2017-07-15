@@ -910,7 +910,9 @@ int CRPRenderManager::AddRPVideoPicture(RPVideoPicture& pic)
   || pic.format == RP_RENDER_FMT_MMAL
   || m_pRenderer->IsPictureHW(pic))
   {
-    m_pRenderer->AddRPVideoPictureHW(pic, index);
+    // Disable DXVA rendererer
+    CLog::Log(LOGERROR, "%s - Hardware picture format not supported.", __FUNCTION__);
+    // m_pRenderer->AddRPVideoPictureHW(pic, index);
   }
   else if(pic.format == RP_RENDER_FMT_YUV420P
        || pic.format == RP_RENDER_FMT_YUV420P10

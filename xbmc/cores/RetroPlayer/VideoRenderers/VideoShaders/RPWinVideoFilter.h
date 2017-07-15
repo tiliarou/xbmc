@@ -126,11 +126,11 @@ protected:
   void HandleScalerChange(ESCALINGMETHOD escalingMethod);
 
 private:
-  CRPYUV2RGBMatrix      m_matrix;
+  CRPYUV2RGBMatrix    m_matrix;
   unsigned int        m_sourceWidth, m_sourceHeight;
   CRect               m_sourceRect;
   CPoint              m_dest[4];
-  ERPShaderFormat       m_format;
+  ERPShaderFormat     m_format;
   float               m_texSteps[2];
   bool                m_isNearest;
 
