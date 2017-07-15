@@ -17088,7 +17088,12 @@ msgctxt "#35255"
 msgid "Browse all emulators"
 msgstr ""
 
-#empty strings from id 35256 to 35504
+#: xbmc/addons/AddonInfo.cpp
+msgctxt "#35256"
+msgid "Shader Support add-on"
+msgstr ""
+
+#empty strings from id 35257 to 35504
 
 #. connection state "host unreachable"
 #: xbmc/pvr/addons/PVRClients.cpp
