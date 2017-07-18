@@ -11,6 +11,8 @@
         <description lang="en_GB">The default media center controller is based on the Xbox 360 controller.</description>
         <disclaimer></disclaimer>
         <platform>all</platform>
-        <nofanart>true</nofanart>
+        <assets>
+            <icon>resources/icon.png</icon>
+        </assets>
     </extension>
 </addon>
