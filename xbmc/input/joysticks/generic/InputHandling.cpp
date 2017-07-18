@@ -155,6 +155,7 @@ CJoystickFeature* CInputHandling::CreateFeature(const FeatureName& featureName)
       break;
     }
     case FEATURE_TYPE::ANALOG_STICK:
+    case FEATURE_TYPE::RELPOINTER:
     {
       feature = new CAnalogStick(featureName, m_handler, m_buttonMap);
       break;

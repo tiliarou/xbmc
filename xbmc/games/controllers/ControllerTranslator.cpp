@@ -47,6 +47,7 @@ FEATURE_TYPE CControllerTranslator::TranslateFeatureType(const std::string& strT
   if (strType == LAYOUT_XML_ELM_ACCELEROMETER)    return FEATURE_TYPE::ACCELEROMETER;
   if (strType == LAYOUT_XML_ELM_MOTOR)            return FEATURE_TYPE::MOTOR;
   if (strType == LAYOUT_XML_ELM_RELPOINTER)       return FEATURE_TYPE::RELPOINTER;
+  if (strType == LAYOUT_XML_ELM_ABSPOINTER)       return FEATURE_TYPE::ABSPOINTER;
 
   return FEATURE_TYPE::UNKNOWN;
 }
@@ -55,12 +56,20 @@ const char* CControllerTranslator::TranslateFeatureCategory(FEATURE_CATEGORY cat
 {
   switch (category)
   {
+    //! @todo Move strings to #defines
     case FEATURE_CATEGORY::FACE:          return "face";
     case FEATURE_CATEGORY::SHOULDER:      return "shoulder";
     case FEATURE_CATEGORY::TRIGGER:       return "triggers";
     case FEATURE_CATEGORY::ANALOG_STICK:  return "analogsticks";
     case FEATURE_CATEGORY::ACCELEROMETER: return "accelerometer";
     case FEATURE_CATEGORY::HAPTICS:       return "haptics";
+    case FEATURE_CATEGORY::MOUSE_BUTTON:  return "mouse";
+    case FEATURE_CATEGORY::POINTER:       return "pointer";
+    case FEATURE_CATEGORY::LIGHTGUN:      return "lightgun";
+    case FEATURE_CATEGORY::OFFSCREEN:     return "offscreen";
+    case FEATURE_CATEGORY::KEY:           return "keys";
+    case FEATURE_CATEGORY::KEYPAD:        return "keypad";
+    case FEATURE_CATEGORY::HARDWARE:      return "hardware";
     default:
       break;
   }
@@ -69,12 +78,20 @@ const char* CControllerTranslator::TranslateFeatureCategory(FEATURE_CATEGORY cat
 
 FEATURE_CATEGORY CControllerTranslator::TranslateFeatureCategory(const std::string& strCategory)
 {
+  //! @todo Move strings to #defines
   if (strCategory == "face")           return FEATURE_CATEGORY::FACE;
   if (strCategory == "shoulder")       return FEATURE_CATEGORY::SHOULDER;
   if (strCategory == "triggers")       return FEATURE_CATEGORY::TRIGGER;
   if (strCategory == "analogsticks")   return FEATURE_CATEGORY::ANALOG_STICK;
   if (strCategory == "accelerometer")  return FEATURE_CATEGORY::ACCELEROMETER;
   if (strCategory == "haptics")        return FEATURE_CATEGORY::HAPTICS;
+  if (strCategory == "mouse")          return FEATURE_CATEGORY::MOUSE_BUTTON;
+  if (strCategory == "pointer")        return FEATURE_CATEGORY::POINTER;
+  if (strCategory == "lightgun")       return FEATURE_CATEGORY::LIGHTGUN;
+  if (strCategory == "offscreen")      return FEATURE_CATEGORY::OFFSCREEN;
+  if (strCategory == "keys")           return FEATURE_CATEGORY::KEY;
+  if (strCategory == "keypad")         return FEATURE_CATEGORY::KEYPAD;
+  if (strCategory == "hardeware")      return FEATURE_CATEGORY::HARDWARE;
 
   return FEATURE_CATEGORY::UNKNOWN;
 }

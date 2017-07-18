@@ -226,8 +226,14 @@ std::vector<CGUIButtonControl*> CGUIFeatureList::GetButtons(const std::vector<CC
         break;
       }
       case JOYSTICK::FEATURE_TYPE::ANALOG_STICK:
+      case JOYSTICK::FEATURE_TYPE::RELPOINTER:
       {
         pButton = new CGUIAnalogStickButton(*m_guiButtonTemplate, m_wizard, feature, featureIndex);
+        break;
+      }
+      case JOYSTICK::FEATURE_TYPE::ABSPOINTER:
+      {
+        //! @todo
         break;
       }
       default:

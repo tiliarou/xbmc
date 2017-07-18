@@ -98,18 +98,12 @@ bool CControllerFeature::Deserialize(const TiXmlElement* pElement,
     return false;
   }
 
-  // Label (not used for motors)
-  if (m_type != FEATURE_TYPE::MOTOR)
-  {
-    // Label ID
-    std::string strLabel = XMLUtils::GetAttribute(pElement, LAYOUT_XML_ATTR_FEATURE_LABEL);
-    if (strLabel.empty())
-    {
-      CLog::Log(LOGERROR, "<%s> tag has no \"%s\" attribute", strType.c_str(), LAYOUT_XML_ATTR_FEATURE_LABEL);
-      return false;
-    }
+  // Label ID
+  std::string strLabel = XMLUtils::GetAttribute(pElement, LAYOUT_XML_ATTR_FEATURE_LABEL);
+  if (strLabel.empty())
+    CLog::Log(LOGWARNING, "<%s> tag has no \"%s\" attribute", strType.c_str(), LAYOUT_XML_ATTR_FEATURE_LABEL);
+  else
     std::istringstream(strLabel) >> m_labelId;
-  }
 
   // Input type
   if (m_type == FEATURE_TYPE::SCALAR)
