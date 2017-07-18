@@ -45,7 +45,7 @@ public:
   JOYSTICK::FEATURE_CATEGORY Category(void) const { return m_category; }
   const std::string&     CategoryLabel(void) const { return m_strCategory; }
   const std::string&     Name(void) const       { return m_strName; }
-  const std::string&     Label(void) const      { return m_strLabel; }
+  std::string            Label(void) const;
   unsigned int           LabelID(void) const    { return m_labelId; }
   JOYSTICK::INPUT_TYPE InputType(void) const { return m_inputType; }
 
@@ -55,11 +55,11 @@ public:
                    const std::string& strCategory);
 
 private:
+  std::string m_controllerId;
   JOYSTICK::FEATURE_TYPE m_type;
   JOYSTICK::FEATURE_CATEGORY m_category;
   std::string            m_strCategory;
   std::string            m_strName;
-  std::string            m_strLabel;
   unsigned int           m_labelId;
   JOYSTICK::INPUT_TYPE m_inputType;
 };

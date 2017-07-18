@@ -34,11 +34,11 @@ using namespace JOYSTICK;
 
 void CControllerFeature::Reset(void)
 {
+  m_controllerId.clear();
   m_type = FEATURE_TYPE::UNKNOWN;
   m_category = FEATURE_CATEGORY::UNKNOWN;
   m_strCategory.clear();
   m_strName.clear();
-  m_strLabel.clear();
   m_labelId = 0;
   m_inputType = INPUT_TYPE::UNKNOWN;
 }
@@ -47,15 +47,20 @@ CControllerFeature& CControllerFeature::operator=(const CControllerFeature& rhs)
 {
   if (this != &rhs)
   {
+    m_controllerId = rhs.m_controllerId;
     m_type       = rhs.m_type;
     m_category   = rhs.m_category;
     m_strCategory = rhs.m_strCategory;
     m_strName    = rhs.m_strName;
-    m_strLabel   = rhs.m_strLabel;
     m_labelId    = rhs.m_labelId;
     m_inputType  = rhs.m_inputType;
   }
   return *this;
+}
+
+std::string CControllerFeature::Label(void) const
+{
+  return g_localizeStrings.GetAddonString(m_controllerId, m_labelId);
 }
 
 bool CControllerFeature::Deserialize(const TiXmlElement* pElement,
@@ -65,10 +70,13 @@ bool CControllerFeature::Deserialize(const TiXmlElement* pElement,
 {
   Reset();
 
-  if (!pElement)
+  if (!pElement || controller == nullptr)
     return false;
 
   std::string strType(pElement->Value());
+
+  // Controller ID
+  m_controllerId = controller->ID();
 
   // Type
   m_type = CControllerTranslator::TranslateFeatureType(strType);
@@ -101,9 +109,6 @@ bool CControllerFeature::Deserialize(const TiXmlElement* pElement,
       return false;
     }
     std::istringstream(strLabel) >> m_labelId;
-
-    // Label (string)
-    m_strLabel = g_localizeStrings.GetAddonString(controller->ID(), m_labelId);
   }
 
   // Input type
