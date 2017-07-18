@@ -179,6 +179,13 @@ bool CGUIControllerList::RefreshControllers(void)
   {
     m_controllers = std::move(newControllers);
 
+    // Remove controllers with no buttons
+    m_controllers.erase(std::remove_if(m_controllers.begin(), m_controllers.end(),
+      [](const ControllerPtr &controller)
+      {
+        return controller->Layout().FeatureCount() == 0;
+      }), m_controllers.end());
+
     // Sort add-ons, with default controller first
     std::sort(m_controllers.begin(), m_controllers.end(),
       [](const ControllerPtr& i, const ControllerPtr& j)
