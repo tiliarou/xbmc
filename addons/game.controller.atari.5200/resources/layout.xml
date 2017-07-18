@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<layout label="30000" image="layout.png" mask="mask.png">
+  <category name="face" label="35074">
+    <button name="start" type="digital" label="30013"/>
+    <button name="pause" type="digital" label="30014"/>
+    <button name="reset" type="digital" label="30015"/>
+    <analogstick name="joystick" label="30016"/>
+  </category>
+  <category name="keypad" label="35108">
+    <button name="1" type="digital" label="30001"/>
+    <button name="2" type="digital" label="30002"/>
+    <button name="3" type="digital" label="30003"/>
+    <button name="4" type="digital" label="30004"/>
+    <button name="5" type="digital" label="30005"/>
+    <button name="6" type="digital" label="30006"/>
+    <button name="7" type="digital" label="30007"/>
+    <button name="8" type="digital" label="30008"/>
+    <button name="9" type="digital" label="30009"/>
+    <button name="0" type="digital" label="30010"/>
+    <button name="star" type="digital" label="30011"/>
+    <button name="pound" type="digital" label="30012"/>
+  </category>
+</layout>
