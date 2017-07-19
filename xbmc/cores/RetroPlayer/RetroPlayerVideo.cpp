@@ -22,14 +22,9 @@
 #include "RetroPlayerDefines.h"
 #include "PixelConverter.h"
 #include "PixelConverterRBP.h"
-#include "cores/VideoPlayer/DVDCodecs/Video/DVDVideoCodec.h"
 #include "cores/VideoPlayer/DVDCodecs/DVDCodecUtils.h"
-#include "cores/VideoPlayer/DVDCodecs/DVDFactoryCodec.h"
-#include "cores/VideoPlayer/DVDDemuxers/DVDDemux.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderManager.h"
-#include "cores/VideoPlayer/DVDStreamInfo.h"
-#include "cores/VideoPlayer/TimingConstants.h"
 #include "utils/log.h"
 
 #include <atomic> //! @todo
@@ -86,6 +81,8 @@ bool CRetroPlayerVideo::OpenPixelStream(AVPixelFormat pixfmt, unsigned int width
 
 bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
 {
+  // TODO: Fix video codec (for GameStream)
+  /*
   CDemuxStreamVideo videoStream;
 
   // Stream
@@ -94,6 +91,7 @@ bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
   videoStream.type = STREAM_VIDEO;
   videoStream.source = STREAM_SOURCE_DEMUX;
   videoStream.realtime = true;
+  */
 
   // Video
   //! @todo Needed?
@@ -106,11 +104,14 @@ bool CRetroPlayerVideo::OpenEncodedStream(AVCodecID codec)
   videoStream.iOrientation = orientationDeg;
   */
 
+  /*
   CDVDStreamInfo hint(videoStream);
   // FIXME
   //m_pVideoCodec.reset(CDVDFactoryCodec::CreateVideoCodec(hint, m_processInfo, m_renderManager.GetRenderInfo()));
 
   return m_pVideoCodec.get() != nullptr;
+  */
+  return false;
 }
 
 void CRetroPlayerVideo::AddData(const uint8_t* data, unsigned int size)
@@ -137,7 +138,7 @@ void CRetroPlayerVideo::CloseStream()
 {
   m_renderManager.Flush();
   m_pixelConverter.reset();
-  m_pVideoCodec.reset();
+  // m_pVideoCodec.reset();
 }
 
 bool CRetroPlayerVideo::Configure(VideoPicture& picture)
@@ -186,6 +187,7 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, Video
       }
     }
   }
+  /*
   else if (m_pVideoCodec)
   {
     DemuxPacket packet(const_cast<uint8_t*>(data), size, DVD_NOPTS_VALUE, DVD_NOPTS_VALUE);
@@ -202,6 +204,7 @@ bool CRetroPlayerVideo::GetPicture(const uint8_t* data, unsigned int size, Video
       }
     }
   }
+  */
 
   return bHasPicture;
 }
