@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <layout label="30000" image="layout_proline.png" mask="mask_proline.png">
   <category name="face" label="35074">
-    <button name="1" type="digital" label="30001"/>
-    <button name="2" type="digital" label="30002"/>
+    <button name="button1" type="digital" label="30001"/>
+    <button name="button2" type="digital" label="30002"/>
     <analogstick name="joystick" label="30003"/>
   </category>
   <category name="hardware" label="35107">

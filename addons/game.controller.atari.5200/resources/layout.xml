@@ -7,16 +7,16 @@
     <analogstick name="joystick" label="30016"/>
   </category>
   <category name="keypad" label="35108">
-    <button name="1" type="digital" label="30001"/>
-    <button name="2" type="digital" label="30002"/>
-    <button name="3" type="digital" label="30003"/>
-    <button name="4" type="digital" label="30004"/>
-    <button name="5" type="digital" label="30005"/>
-    <button name="6" type="digital" label="30006"/>
-    <button name="7" type="digital" label="30007"/>
-    <button name="8" type="digital" label="30008"/>
-    <button name="9" type="digital" label="30009"/>
-    <button name="0" type="digital" label="30010"/>
+    <button name="num1" type="digital" label="30001"/>
+    <button name="num2" type="digital" label="30002"/>
+    <button name="num3" type="digital" label="30003"/>
+    <button name="num4" type="digital" label="30004"/>
+    <button name="num5" type="digital" label="30005"/>
+    <button name="num6" type="digital" label="30006"/>
+    <button name="num7" type="digital" label="30007"/>
+    <button name="num8" type="digital" label="30008"/>
+    <button name="num9" type="digital" label="30009"/>
+    <button name="num0" type="digital" label="30010"/>
     <button name="star" type="digital" label="30011"/>
     <button name="pound" type="digital" label="30012"/>
   </category>
