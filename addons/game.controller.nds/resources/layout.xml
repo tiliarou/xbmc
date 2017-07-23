@@ -20,7 +20,7 @@
     <relpointer name="pointer" label="30013"/>
     <abspointer name="touch"/>
   </category>
-  <category name="hardware" label="13281">
+  <category name="hardware" label="35108">
     <button name="lid" type="digital" label="30014"/>
     <button name="layout" type="digital" label="30015"/>
     <button name="microphone" type="digital" label="30016"/>

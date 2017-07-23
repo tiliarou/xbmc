@@ -9,8 +9,8 @@
   <physicaltopology>
     <provides controller="game.controller.3do.gamegun"/>
     <port id="1">
-      <accepts controller="game.controller.3do"/>
       <accepts controller="game.controller.3do.gamegun"/>
+      <accepts controller="game.controller.3do"/>
     </port>
   </physicaltopology>
 </layout>

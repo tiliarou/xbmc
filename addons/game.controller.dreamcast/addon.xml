@@ -8,7 +8,7 @@
     <extension point="kodi.game.controller" library="resources/layout.xml"/>
     <extension point="xbmc.addon.metadata">
         <summary lang="en_GB">Sega Dreamcast controller</summary>
-        <description lang="en_GB">The Sega Dreamcast controller is a logical progression from the 3D Control Pad for the Sega Saturn.</description>
+        <description lang="en_GB">The Sega Dreamcast was released in 1998. The inclusion of an analog stick reflected the transition from 2D arcade games to 3D game environments. The Dreamcast had a short lifespan and marked the end of Sega's 18 years in the console market.</description>
         <disclaimer></disclaimer>
         <platform>all</platform>
         <assets>

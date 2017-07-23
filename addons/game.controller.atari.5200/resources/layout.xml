@@ -6,7 +6,7 @@
     <button name="reset" type="digital" label="30015"/>
     <analogstick name="joystick" label="30016"/>
   </category>
-  <category name="keypad" label="35108">
+  <category name="keypad" label="35109">
     <button name="num1" type="digital" label="30001"/>
     <button name="num2" type="digital" label="30002"/>
     <button name="num3" type="digital" label="30003"/>

@@ -10,7 +10,7 @@
     <button name="down" type="digital" label="30007"/>
     <button name="left" type="digital" label="30008"/>
   </category>
-  <category name="keypad" label="35108">
+  <category name="keypad" label="35109">
     <button name="num1" type="digital" label="30009"/>
     <button name="num2" type="digital" label="30010"/>
     <button name="num3" type="digital" label="30011"/>
