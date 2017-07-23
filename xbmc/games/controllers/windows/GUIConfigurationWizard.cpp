@@ -283,12 +283,6 @@ bool CGUIConfigurationWizard::MapPrimitive(JOYSTICK::IButtonMap* buttonMap,
           bHandled = true;
           break;
         }
-        case FEATURE_TYPE::RELPOINTER:
-        {
-          buttonMap->AddRelativePointer(feature.Name(), currentDirection, primitive);
-          bHandled = true;
-          break;
-        }
         default:
           break;
       }
