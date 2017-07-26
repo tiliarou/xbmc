@@ -244,6 +244,7 @@ public:
 
   bool Create(const std::wstring& vertexFile, D3D11_INPUT_ELEMENT_DESC* vertexLayout, unsigned int vertexLayoutSize);
   bool Create(const void* code, size_t codeLength, D3D11_INPUT_ELEMENT_DESC* vertexLayout, unsigned int vertexLayoutSize);
+  bool Create(ID3DBlob* code, D3D11_INPUT_ELEMENT_DESC* vertexLayout, unsigned int vertexLayoutSize);
   void ReleaseShader();
   void BindShader();
   void UnbindShader();
@@ -272,6 +273,7 @@ public:
 
   bool Create(const std::wstring& wstrFile);
   bool Create(const void* code, size_t codeLength);
+  bool Create(ID3DBlob* code);
   void ReleaseShader();
   void BindShader();
   void UnbindShader();

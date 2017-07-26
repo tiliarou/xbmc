@@ -403,7 +403,7 @@ void CD3DTexture::SaveTexture()
       // copy contents to new texture
       pContext->CopyResource(texture, m_texture);
     }
-    else 
+    else
       texture = m_texture;
 
     // read data from texture
@@ -1049,6 +1049,34 @@ bool CD3DVertexShader::Create(const void* code, size_t codeLength, D3D11_INPUT_E
   return m_inited;
 }
 
+bool CD3DVertexShader::Create(ID3DBlob* code, D3D11_INPUT_ELEMENT_DESC* vertexLayout, unsigned int vertexLayoutSize)
+{
+  ReleaseShader();
+
+  ID3D11Device* pDevice = g_Windowing.Get3D11Device();
+
+  if (!pDevice)
+    return false;
+
+  m_VSBuffer = code;
+  if (vertexLayout && vertexLayoutSize)
+  {
+    m_vertexLayoutSize = vertexLayoutSize;
+    m_vertexLayout = new D3D11_INPUT_ELEMENT_DESC[vertexLayoutSize];
+    for (unsigned int i = 0; i < vertexLayoutSize; ++i)
+      m_vertexLayout[i] = vertexLayout[i];
+  }
+  else
+    return false;
+
+  m_inited = CreateInternal();
+
+  if (m_inited)
+    g_Windowing.Register(this);
+
+  return m_inited;
+}
+
 bool CD3DVertexShader::CreateInternal()
 {
   ID3D11Device* pDevice = g_Windowing.Get3D11Device();
@@ -1174,6 +1202,25 @@ bool CD3DPixelShader::Create(const void* code, size_t codeLength)
     CLog::Log(LOGERROR, __FUNCTION__ " - Failed to load the vertex shader.");
     return false;
   }
+
+  m_inited = CreateInternal();
+
+  if (m_inited)
+    g_Windowing.Register(this);
+
+  return m_inited;
+}
+
+bool CD3DPixelShader::Create(ID3DBlob* code)
+{
+  ReleaseShader();
+
+  ID3D11Device* pDevice = g_Windowing.Get3D11Device();
+
+  if (!pDevice)
+    return false;
+
+  m_PSBuffer = code;
 
   m_inited = CreateInternal();
 
