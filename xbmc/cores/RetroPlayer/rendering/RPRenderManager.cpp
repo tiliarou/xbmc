@@ -21,12 +21,14 @@
 #include "RPRenderManager.h"
 
 #include "Application.h"
-#include "cores/RetroPlayer/rendering/VideoRenderers/RPWinRenderer.h"
-#include "utils/win32/Win32Log.h"
 #include "TimingConstants.h"
 #include "VideoRenderers/RenderFlags.h"
 #include "messaging/ApplicationMessenger.h"
 #include "cores/RetroPlayer/RetroPlayer.h"
+#ifdef _WIN32
+#include "cores/RetroPlayer/rendering/VideoRenderers/RPWinRenderer.h"
+#include "utils/win32/Win32Log.h"
+#endif
 
 CRPRenderManager::CRPRenderManager(CDVDClock& clock, IRenderMsg* player)
   : CRenderManager(clock, player)
@@ -41,7 +43,9 @@ void CRPRenderManager::PreInit()
 {
   if (!g_application.IsCurrentThread())
   {
+#ifdef _WIN32
     CLog::Log(LOGERROR, "CRenderManager::PreInit - not called from render thread");
+#endif
     return;
   }
 
@@ -63,6 +67,7 @@ void CRPRenderManager::CreateRenderer()
 {
   if (!m_pRenderer)
   {
+#ifdef _WIN32
     CVideoBuffer *buffer = nullptr;
     if (m_pConfigPicture)
       buffer = m_pConfigPicture->videoBuffer;
@@ -82,7 +87,7 @@ void CRPRenderManager::CreateRenderer()
       }
     }
     */
-#ifdef _WIN32
+
     m_pRenderer = CRPWinRenderer::Create(buffer);
 #else
     m_pRenderer = nullptr;

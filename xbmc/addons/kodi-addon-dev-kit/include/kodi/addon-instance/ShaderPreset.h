@@ -59,8 +59,29 @@ extern "C"
 
   /// =============================
 
+  /// ==== video_state_tracker =====
 
-  /// ==== video_shader_PARSE =====
+  enum state_tracker_type_
+  {
+    RARCH_STATE_CAPTURE_ = 0,
+    RARCH_STATE_CAPTURE_PREV_,
+    RARCH_STATE_TRANSITION_,
+    RARCH_STATE_TRANSITION_COUNT_,
+    RARCH_STATE_TRANSITION_PREV_,
+    RARCH_STATE_PYTHON_
+  };
+
+  enum state_ram_type_
+  {
+    RARCH_STATE_NONE_,
+    RARCH_STATE_WRAM_,
+    RARCH_STATE_INPUT_SLOT1_,
+    RARCH_STATE_INPUT_SLOT2_
+  };
+
+  /// =============================
+
+  /// ==== video_shader_parse =====
 
   #ifndef PATH_MAX_LENGTH
   #if defined(_XBOX1) || defined(_3DS) || defined(PSP) || defined(GEKKO)|| defined(WIIU)
@@ -244,7 +265,6 @@ extern "C"
       config_file_t_ *conf);
 
     /// =============================
-
 
     /// ==== video_shader_PARSE =====
 
