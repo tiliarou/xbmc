@@ -1149,6 +1149,10 @@ CGUIControl* CGUIControlFactory::Create(int parentID, const CRect &rect, TiXmlEl
 
       control = new CGUIGameControl(parentID, id, posX, posY, width, height);
 
+      CGUIInfoLabel videoFilter;
+      GetInfoLabel(pControlNode, "videofilter", videoFilter, parentID);
+      static_cast<CGUIGameControl*>(control)->SetVideoFilter(videoFilter);
+
       CGUIInfoLabel scalingMethod;
       GetInfoLabel(pControlNode, "scalingmethod", scalingMethod, parentID);
       static_cast<CGUIGameControl*>(control)->SetScalingMethod(scalingMethod);

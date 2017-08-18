@@ -70,10 +70,12 @@ void CGUIGameSettings::UpdateSettings()
   CSingleLock lock(m_mutex);
 
   // Get settings from GUI
+  std::string shaderPreset = m_guiSettings.VideoFilter();
   ESCALINGMETHOD scalingMethod = m_guiSettings.ScalingMethod();
   ViewMode viewMode = m_guiSettings.ViewMode();
 
   // Save settings for renderer
+  m_renderSettings.VideoSettings().SetShaderPreset(shaderPreset);
   m_renderSettings.VideoSettings().SetScalingMethod(scalingMethod);
   m_renderSettings.VideoSettings().SetRenderViewMode(viewMode);
 }

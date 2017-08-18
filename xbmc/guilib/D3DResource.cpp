@@ -23,6 +23,7 @@
 #include "GUIShaderDX.h"
 #include "system.h"
 #include "utils/log.h"
+#include "utils/URIUtils.h"
 #include "windowing/WindowingFactory.h"
 
 #pragma comment(lib, "d3dcompiler.lib")
@@ -559,6 +560,7 @@ CD3DEffect::CD3DEffect()
   m_effect = nullptr;
   m_techniquie = nullptr;
   m_currentPass = nullptr;
+  m_includePaths.insert("special://xbmc/system/shaders/");
 }
 
 CD3DEffect::~CD3DEffect()
@@ -602,15 +604,38 @@ void CD3DEffect::OnCreateDevice()
 HRESULT CD3DEffect::Open(D3D_INCLUDE_TYPE IncludeType, LPCSTR pFileName, LPCVOID pParentData, LPCVOID* ppData, UINT* pBytes)
 {
   XFILE::CFile includeFile;
+  bool found = false;
+  std::string fileName;
 
-  std::string fileName("special://xbmc/system/shaders/");
-  fileName.append(pFileName);
-
-  if (!includeFile.Open(fileName))
+  for (const auto& includePath : m_includePaths)
   {
-    CLog::Log(LOGERROR, "%s: Could not open 3DLUT file: %s", __FUNCTION__, fileName.c_str());
+    fileName = includePath;
+    std::string includeURL = "";
+    size_t endOfURL = 0;
+    if (URIUtils::IsURL(includePath))
+    {
+      endOfURL = includePath.find(":") + 3;   // include "://"
+      includeURL = includePath.substr(0, endOfURL);
+      fileName.erase(0, endOfURL);
+    }
+
+    fileName = URIUtils::CanonicalizePath(
+      URIUtils::AddFileToFolder(fileName, pFileName));
+    fileName.insert(0, includeURL);
+
+    if (includeFile.Open(fileName))
+    {
+      found = true;
+      break;
+    }
+  }
+  if (!found)
+  {
+    CLog::Log(LOGERROR, "%s: Could not open include file: %s", __FUNCTION__, fileName.c_str());
     return E_FAIL;
   }
+
+  m_includePaths.insert(URIUtils::GetBasePath(fileName));
 
   int64_t length = includeFile.GetLength();
   void *pData = malloc(length);
@@ -664,11 +689,16 @@ bool CD3DEffect::SetTechnique(LPCSTR handle)
 
 bool CD3DEffect::SetTexture(LPCSTR handle, CD3DTexture &texture)
 {
+  return SetTexture(handle, texture.GetShaderResource());
+}
+
+bool CD3DEffect::SetTexture(LPCSTR handle, ID3D11ShaderResourceView* resourceView)
+{
   if (m_effect)
   {
     ID3DX11EffectShaderResourceVariable* var = m_effect->GetVariableByName(handle)->AsShaderResource();
     if (var->IsValid())
-      return SUCCEEDED(var->SetResource(texture.GetShaderResource()));
+      return SUCCEEDED(var->SetResource(resourceView));
   }
   return false;
 }
@@ -705,6 +735,11 @@ bool CD3DEffect::SetScalar(LPCSTR handle, float value)
   }
 
   return false;
+}
+
+void CD3DEffect::AddIncludePath(const std::string& includePath)
+{
+  m_includePaths.insert(includePath);
 }
 
 bool CD3DEffect::Begin(UINT *passes, DWORD flags)
@@ -782,6 +817,9 @@ bool CD3DEffect::CreateEffect()
   //dwShaderFlags |= D3DCOMPILE_DEBUG;
   // Disable optimizations to further improve shader debugging
   //dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+  dwShaderFlags |= D3DCOMPILE_ENABLE_BACKWARDS_COMPATIBILITY;
+  dwShaderFlags |= D3DCOMPILE_OPTIMIZATION_LEVEL3;
 #endif
 
   hr = D3DX11CompileEffectFromMemory(m_effectString.c_str(), m_effectString.length(), "", &definemacros[0], this,

@@ -19,6 +19,7 @@
  */
 
 #include "GameServices.h"
+#include "cores/RetroPlayer/rendering/VideoShaders/VideoShaderPresetFactory.h"
 #include "controllers/Controller.h"
 #include "controllers/ControllerManager.h"
 #include "games/ports/PortManager.h"
@@ -29,10 +30,13 @@ using namespace GAME;
 
 CGameServices::CGameServices(CControllerManager &controllerManager,
                              RETRO:: CGUIGameRenderManager &renderManager,
-                             PERIPHERALS::CPeripherals &peripheralManager) :
+                             PERIPHERALS::CPeripherals &peripheralManager,
+                             ADDON::CAddonMgr &addons,
+                             ADDON::CBinaryAddonManager &binaryAddons) :
   m_controllerManager(controllerManager),
   m_gameRenderManager(renderManager),
-  m_portManager(new CPortManager(peripheralManager))
+  m_portManager(new CPortManager(peripheralManager)),
+  m_videoShaders(new SHADER::CVideoShaderPresetFactory(addons, binaryAddons))
 {
 }
 

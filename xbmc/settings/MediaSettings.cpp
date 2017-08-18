@@ -131,6 +131,10 @@ bool CMediaSettings::Load(const TiXmlNode *settings)
   pElement = settings->FirstChildElement("defaultgamesettings");
   if (pElement != nullptr)
   {
+    std::string videoFilter;
+    if (XMLUtils::GetString(pElement, "videofilter", videoFilter))
+      m_defaultGameSettings.SetVideoFilter(videoFilter);
+
     int scalingMethod;
     if (XMLUtils::GetInt(pElement, "scalingmethod", scalingMethod, VS_SCALINGMETHOD_NEAREST, VS_SCALINGMETHOD_MAX))
       m_defaultGameSettings.SetScalingMethod(static_cast<ESCALINGMETHOD>(scalingMethod));
@@ -233,6 +237,7 @@ bool CMediaSettings::Save(TiXmlNode *settings) const
   if (pNode == nullptr)
     return false;
 
+  XMLUtils::SetString(pNode, "videofilter", m_defaultGameSettings.VideoFilter());
   XMLUtils::SetInt(pNode, "scalingmethod", m_defaultGameSettings.ScalingMethod());
   XMLUtils::SetInt(pNode, "viewmode", m_defaultGameSettings.ViewMode());
 

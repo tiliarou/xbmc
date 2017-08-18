@@ -24,6 +24,12 @@
 #include <memory>
 #include <string>
 
+namespace ADDON
+{
+  class CAddonMgr;
+  class CBinaryAddonManager;
+}
+
 namespace PERIPHERALS
 {
   class CPeripherals;
@@ -36,6 +42,11 @@ namespace RETRO
   class CGUIGameRenderManager;
 }
 
+namespace SHADER
+{
+  class CVideoShaderPresetFactory;
+}
+
 namespace GAME
 {
   class CControllerManager;
@@ -46,7 +57,9 @@ namespace GAME
   public:
     CGameServices(CControllerManager &controllerManager,
                   RETRO::CGUIGameRenderManager &renderManager,
-                  PERIPHERALS::CPeripherals &peripheralManager);
+                  PERIPHERALS::CPeripherals &peripheralManager,
+                  ADDON::CAddonMgr &addons,
+                  ADDON::CBinaryAddonManager &binaryAddons);
     ~CGameServices();
 
     ControllerPtr GetController(const std::string& controllerId);
@@ -57,6 +70,8 @@ namespace GAME
 
     RETRO::CGUIGameRenderManager &GameRenderManager() { return m_gameRenderManager; }
 
+    SHADER::CVideoShaderPresetFactory &VideoShaders() { return *m_videoShaders; }
+
   private:
     // Construction parameters
     CControllerManager &m_controllerManager;
@@ -64,6 +79,7 @@ namespace GAME
 
     // Game services
     std::unique_ptr<CPortManager> m_portManager;
+    std::unique_ptr<SHADER::CVideoShaderPresetFactory> m_videoShaders;
   };
 }
 }
