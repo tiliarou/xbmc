@@ -19,17 +19,22 @@ void CRenderVideoSettings::Reset()
   m_scalingMethod = SCALINGMETHOD::AUTO;
   m_stretchMode = STRETCHMODE::Normal;
   m_rotationDegCCW = 0;
+  m_shaderPreset.clear();
 }
 
 bool CRenderVideoSettings::operator==(const CRenderVideoSettings &rhs) const
 {
   return m_scalingMethod == rhs.m_scalingMethod &&
          m_stretchMode == rhs.m_stretchMode &&
-         m_rotationDegCCW == rhs.m_rotationDegCCW;
+         m_rotationDegCCW == rhs.m_rotationDegCCW &&
+         m_shaderPreset == rhs.m_shaderPreset;
 }
 
 bool CRenderVideoSettings::operator<(const CRenderVideoSettings &rhs) const
 {
+  if (m_shaderPreset < rhs.m_shaderPreset) return true;
+  if (m_shaderPreset > rhs.m_shaderPreset) return false;
+
   if (m_scalingMethod < rhs.m_scalingMethod) return true;
   if (m_scalingMethod > rhs.m_scalingMethod) return false;
 

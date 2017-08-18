@@ -200,6 +200,8 @@ namespace RETRO
     // Synchronization parameters
     CCriticalSection m_stateMutex;
     CCriticalSection m_bufferMutex;
+
+    std::set<std::string> m_failedShaderPresets;
   };
 }
 }
