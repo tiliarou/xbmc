@@ -109,6 +109,7 @@ namespace RETRO
 
     // implementation of CRPBaseRenderer
     bool Supports(ERENDERFEATURE feature) const override;
+    bool Supports(ESCALINGMETHOD method) const override;
     ESCALINGMETHOD GetDefaultScalingMethod() const override { return DEFAULT_SCALING_METHOD; }
 
     static bool SupportsScalingMethod(ESCALINGMETHOD method);
@@ -124,13 +125,12 @@ namespace RETRO
     void RenderInternal(bool clear, uint8_t alpha) override;
 
   private:
-    void CompileOutputShader(ESCALINGMETHOD scalingMethod);
-    void HandleScalingChange();
+    void CompileOutputShaders(ESCALINGMETHOD defaultScalingMethod);
     void Render(CD3DTexture *target);
 
-    std::unique_ptr<CRPWinOutputShader> m_outputShader;
     ESCALINGMETHOD m_prevScalingMethod = VS_SCALINGMETHOD_AUTO;
     SHADER::CShaderTextureCD3D m_targetTexture;
+    std::map<ESCALINGMETHOD, std::shared_ptr<CRPWinOutputShader>> m_outputShaders;
   };
 }
 }
