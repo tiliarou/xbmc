@@ -53,13 +53,13 @@ IShaderSampler* SHADER::CreateLUTSampler(RETRO::CRenderContext &context, const V
   FLOAT blackBorder[4] = { 0, 1, 0, 1 };  // TODO: turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
-  /*! @todo Commented due to merge conflict
-  if (FAILED(renderingDx->Get3D11Device()->CreateSamplerState(&sampDesc, &samp)))
+  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+
+  if (FAILED(pDevice->CreateSamplerState(&sampDesc, &samp)))
   {
     CLog::Log(LOGWARNING, "%s - failed to create LUT sampler for LUT &s", __FUNCTION__, lut.path.c_str());
     return nullptr;
   }
-  */
 
   // todo: take care of allocation(?)
   return new CShaderSamplerDX(samp);

@@ -204,8 +204,7 @@ bool CVideoShaderDX::CreateInputBuffer()
 {
   CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
 
-  /*! @todo Commented due to merge conflict
-  ID3D11Device* pDevice = renderingDx->Get3D11Device();
+  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
   cbInput inputInitData = GetInputData();
   auto inputBufSize = (sizeof(cbInput) + 15) & ~15;
   CD3D11_BUFFER_DESC cbInputDesc(inputBufSize, D3D11_BIND_CONSTANT_BUFFER, D3D11_USAGE_DYNAMIC, D3D11_CPU_ACCESS_WRITE);
@@ -215,17 +214,13 @@ bool CVideoShaderDX::CreateInputBuffer()
     CLog::Log(LOGERROR, __FUNCTION__ " - Failed to create constant buffer for video shader input data.");
     return false;
   }
-  */
 
   return true;
 }
 
 void CVideoShaderDX::UpdateInputBuffer(uint64_t frameCount)
 {
-  /*! @todo Merge conflicts - rendering has multiple DX device resources
-  CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
-
-  ID3D11DeviceContext1 *pContext = renderingDx->Get3D11Context();
+  ID3D11DeviceContext1 *pContext = DX::DeviceResources::Get()->GetD3DContext();
 
   cbInput input = GetInputData(frameCount);
   cbInput* pData;
@@ -239,7 +234,6 @@ void CVideoShaderDX::UpdateInputBuffer(uint64_t frameCount)
     memcpy(*ppData, &input, sizeof(cbInput));
     pContext->Unmap(m_pInputBuffer, 0);
   }
-  */
 }
 
 CVideoShaderDX::cbInput CVideoShaderDX::GetInputData(uint64_t frameCount)
@@ -248,20 +242,18 @@ CVideoShaderDX::cbInput CVideoShaderDX::GetInputData(uint64_t frameCount)
     frameCount %= m_frameCountMod;
 
   cbInput input = {
-    /*! @todo Commented due to merge conflicts
     // Resution of texture passed to the shader
-    { m_inputSize.ToDXVector() },    // video_size
+    { m_inputSize.ToDXVector() },       // video_size
     // Shaders don't (and shouldn't) know about _actual_ texture
     // size, because D3D gives them correct texture coordinates
-    { m_inputSize.ToDXVector() },    // texture_size
+    { m_inputSize.ToDXVector() },       // texture_size
     // As per the spec, this is the viewport resolution (not the
     // output res of each shader
-    { m_viewportSize.ToDXVector() }, // output_size
+    { m_viewportSize.ToDXVector() },    // output_size
     // Current frame count that can be modulo'ed
-    { static_cast<float>(frameCount) },     // frame_count
+    { static_cast<float>(frameCount) }, // frame_count
     // Time always flows forward
-    { 1.0f }               // frame_direction
-    */
+    { 1.0f }                            // frame_direction
   };
 
   return input;

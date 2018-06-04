@@ -22,6 +22,11 @@
 #include <map>
 #include <algorithm>
 
+// TODO: remove (see below)
+#ifdef _WIN32
+#include <DirectXMath.h>
+#endif
+
 namespace KODI
 {
 namespace SHADER
@@ -41,15 +46,13 @@ namespace SHADER
     template<typename T>
     T Min() { return static_cast<T>(std::min(x, y)); }
 
-    //todo: remove
-    /*! @todo Commented due to merge conflict
+    //TODO: move to VideoShaderUtilsDX
 #ifdef _WIN32
     DirectX::XMFLOAT2 ToDXVector() const
     {
       return DirectX::XMFLOAT2(static_cast<float>(x), static_cast<float>(y));
     }
 #endif
-    */
 
     float x;
     float y;

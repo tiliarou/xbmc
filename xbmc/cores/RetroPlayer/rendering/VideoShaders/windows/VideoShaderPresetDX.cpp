@@ -380,15 +380,15 @@ bool CVideoShaderPresetDX::CreateSamplers()
   FLOAT blackBorder[4] = { 1, 0, 0, 1 };  // TODO: turn this back to black
   memcpy(sampDesc.BorderColor, &blackBorder, 4 * sizeof(FLOAT));
 
-  /*! @todo Merge conflicts - rendering has multiple DX device resources
-  if (FAILED(renderingDx->Get3D11Device()->CreateSamplerState(&sampDesc, &m_pSampNearest)))
+  ID3D11Device* pDevice = DX::DeviceResources::Get()->GetD3DDevice();
+
+  if (FAILED(pDevice->CreateSamplerState(&sampDesc, &m_pSampNearest)))
     return false;
 
   D3D11_SAMPLER_DESC sampDescLinear = sampDesc;
   sampDescLinear.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-  if (FAILED(renderingDx->Get3D11Device()->CreateSamplerState(&sampDescLinear, &m_pSampLinear)))
+  if (FAILED(pDevice->CreateSamplerState(&sampDescLinear, &m_pSampLinear)))
     return false;
-  */
 
   return true;
 }
