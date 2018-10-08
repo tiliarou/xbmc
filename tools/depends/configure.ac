@@ -379,6 +379,10 @@ case $host in
     deps_dir="${sdk_name}_${use_cpu}-target-${build_type}"
     AC_CHECK_LIB([z], [main], has_zlib=1, AC_MSG_WARN("No zlib support in toolchain. Will build libz."); has_zlib=0)
   ;;
+  aarch64-none-elf)
+    # Switch build
+    # Everything is set on the use_platform switch
+  ;;
   *)
     AC_MSG_ERROR(unsupported host ($use_host))
 esac
@@ -419,6 +423,50 @@ case $use_platform in
      platform_cxxflags="-fPIC -mcpu=cortex-a53 -mfloat-abi=hard -mfpu=neon-fp-armv8 -mvectorize-with-neon-quad"
      platform_ldflags="-lpthread"
      ;;
+  switch)
+     target_platform=switch
+     use_cpu=cortex-a57
+     platform_os="switch"
+
+     # TODO: debug flags probably not needed (appended below)
+     tmp_switch_compile_flags="-g -Wall -ffunction-sections -fdata-sections -march=armv8-a -mtune=cortex-a57 -mtp=soft -fPIC -D__SWITCH__ -DTARGET_SWITCH -D__aarch64__ -ftls-model=local-exec"
+
+     # let everyone know about available headers
+     tmp_switch_compile_flags+=" -DHAVE_SYS_SYSCTL_H -DHAVE_SYS_SOCKIO_H -DHAVE_SYS_SOCKET_H -DHAVE_SYS_IOCTL_H -DHAVE_SYS_FILIO_H -DHAVE_ERRNO_H"
+
+     tmp_switch_includes="-I $DEVKITPRO/libnx/include -I $DEVKITPRO/portlibs/switch/include -include $DEVKITPRO/libnx/include/switch.h"
+     #-include $DEVKITPRO/devkitA64/aarch64-none-elf/include/sys/errno.h"
+
+     # pthread
+     tmp_switch_compile_flags+=" -Dpthread_t=Thread -Dpthread_mutex_t=Mutex -Dpthread_mutexattr_t='void*' -Dpthread_attr_t=int -Dpthread_cond_t=CondVar -Dpthread_condattr_t='int' -DHAVE_THREADS -U__linux__ -U__linux -D_SYS__PTHREADTYPES_H_"
+
+     # curl
+     tmp_switch_compile_flags+=" -UHAVE_SYS_UN_H -UCURL_PULL_SYS_SOCKET_H"
+     
+     # libxml2
+     tmp_switch_compile_flags+=" -D__LINUX_ERRNO_EXTENSIONS__"
+
+     # python
+     #tmp_switch_compile_flags+=" -UUNIX"
+
+     # libfmt
+     #tmp_switch_compile_flags+=" -D__GNU_VISIBLE"
+
+     # openssl
+     #tmp_switch_compile_flags+=" -UAF_UNIX"
+
+     platform_cflags="$tmp_switch_compile_flags $tmp_switch_includes"
+     #platform_cflags+=" -fdiagnostics-color=always"
+     platform_cxxflags="$platform_cflags"
+     platform_ldflags="-specs=$DEVKITPRO/libnx/switch.specs -g $ARCH -Wl,-Map,kodi-switch-deps.map"
+     platform_ldflags+=" -L. -L$DEVKITPRO/libnx/lib -L$DEVKITPRO/portlibs/switch/lib -lpthread --verbose"
+
+     #platform_ldflags+=" -lass"
+     # TODO: Does this do anything?
+     PKG_CONFIG_LIBDIR=$DEVKITPRO/portlibs/switch/lib/pkgconfig
+
+     app_rendersystem="gl"
+    ;;
   auto)
     ;;
   *)

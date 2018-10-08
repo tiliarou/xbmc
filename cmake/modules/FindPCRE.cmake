@@ -31,17 +31,22 @@ find_library(PCRE_LIBRARY_DEBUG NAMES pcred
                                    PATHS ${PC_PCRE_LIBDIR})
 set(PCRE_VERSION ${PC_PCRE_VERSION})
 
+
 include(SelectLibraryConfigurations)
 select_library_configurations(PCRECPP)
 select_library_configurations(PCRE)
 
+message("PCRECPP_LIBRARY is ${PCRECPP_LIBRARY}")
+message("PCRE_LIBRARY is ${PCRE_LIBRARY}")
+message("PCRE_INCLUDE_DIR is ${PCRE_INCLUDE_DIR}")
+
 include(FindPackageHandleStandardArgs)
 find_package_handle_standard_args(PCRE
-                                  REQUIRED_VARS PCRECPP_LIBRARY PCRE_LIBRARY PCRE_INCLUDE_DIR
+                                  REQUIRED_VARS PCRE_LIBRARY PCRE_INCLUDE_DIR
                                   VERSION_VAR PCRE_VERSION)
 
 if(PCRE_FOUND)
-  set(PCRE_LIBRARIES ${PCRECPP_LIBRARY} ${PCRE_LIBRARY})
+  set(PCRE_LIBRARIES ${PCRE_LIBRARY})
   set(PCRE_INCLUDE_DIRS ${PCRE_INCLUDE_DIR})
   if(WIN32)
     set(PCRE_DEFINITIONS -DPCRE_STATIC=1)
@@ -67,21 +72,6 @@ if(PCRE_FOUND)
     endif()
 
   endif()
-  if(NOT TARGET PCRE::PCRECPP)
-    add_library(PCRE::PCRECPP UNKNOWN IMPORTED)
-    if(PCRE_LIBRARY_RELEASE)
-      set_target_properties(PCRE::PCRECPP PROPERTIES
-                                          IMPORTED_CONFIGURATIONS RELEASE
-                                          IMPORTED_LOCATION "${PCRECPP_LIBRARY_RELEASE}")
-    endif()
-    if(PCRE_LIBRARY_DEBUG)
-      set_target_properties(PCRE::PCRECPP PROPERTIES
-                                          IMPORTED_CONFIGURATIONS DEBUG
-                                          IMPORTED_LOCATION "${PCRECPP_LIBRARY_DEBUG}")
-    endif()
-    set_target_properties(PCRE::PCRECPP PROPERTIES
-                                        INTERFACE_LINK_LIBRARIES PCRE::PCRE)
-  endif()
 endif()
 
-mark_as_advanced(PCRE_INCLUDE_DIR PCRECPP_LIBRARY PCRE_LIBRARY)
+mark_as_advanced(PCRE_INCLUDE_DIR PCRE_LIBRARY)
