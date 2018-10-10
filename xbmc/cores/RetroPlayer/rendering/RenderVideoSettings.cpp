@@ -8,11 +8,15 @@
 
 #include "RenderVideoSettings.h"
 
+#include "utils/log.h"
+
 using namespace KODI;
 using namespace RETRO;
 
 #define VIDEO_FILTER_NEAREST  "nearest"
 #define VIDEO_FILTER_LINEAR   "linear"
+
+#define VIDEO_FILTER_DEFAULT VIDEO_FILTER_NEAREST
 
 void CRenderVideoSettings::Reset()
 {
@@ -49,6 +53,13 @@ bool CRenderVideoSettings::operator<(const CRenderVideoSettings &rhs) const
 
 std::string CRenderVideoSettings::GetVideoFilter() const
 {
+  // Sanity check
+  if (!m_shaderPreset.empty() && m_scalingMethod != SCALINGMETHOD::AUTO)
+    CLog::Log(LOGWARNING, "%s - Shader preset selected but scaling method is not AUTO", __FUNCTION__);
+
+  if (UsesShaderPreset())
+    return m_shaderPreset;
+
   switch (m_scalingMethod)
   {
   case SCALINGMETHOD::NEAREST:
@@ -75,5 +86,13 @@ void CRenderVideoSettings::SetVideoFilter(const std::string &videoFilter)
   else
   {
     m_scalingMethod = SCALINGMETHOD::AUTO;
+
+    // Not a known video filter, assume it's a shader preset path
+    SetShaderPreset(videoFilter);
   }
+}
+
+bool CRenderVideoSettings::UsesShaderPreset() const
+{
+  return !m_shaderPreset.empty() && m_scalingMethod == SCALINGMETHOD::AUTO;
 }

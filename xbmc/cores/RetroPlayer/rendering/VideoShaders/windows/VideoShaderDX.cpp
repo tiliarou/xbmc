@@ -87,7 +87,7 @@ void CVideoShaderDX::Render(IShaderTexture* source, IShaderTexture* target)
   auto* sourceDX = static_cast<CShaderTextureCD3D*>(source);
   auto* targetDX = static_cast<CShaderTextureCD3D*>(target);
 
-  // TODO: Doesn't work. Investigate calling this in Execute or binding the SRV first
+  // TODO: Doesn't work. Another PSSetSamplers gets called by FX11 right before rendering, overriding this
   /*
   CRenderSystemDX *renderingDx = static_cast<CRenderSystemDX*>(m_context.Rendering());
   renderingDx->Get3D11Context()->PSSetSamplers(2, 1, &m_pSampler);

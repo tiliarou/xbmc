@@ -90,7 +90,7 @@ bool CVideoShaderPresetDX::ReadPresetFile(const std::string& presetPath)
   return CServiceBroker::GetGameServices().VideoShaders().LoadPreset(presetPath, *this);
 }
 
-bool CVideoShaderPresetDX::RenderUpdate(CPoint dest[], IShaderTexture* source, IShaderTexture* target)
+bool CVideoShaderPresetDX::RenderUpdate(const CPoint dest[], IShaderTexture* source, IShaderTexture* target)
 {
   // Save the viewport
   CRect viewPort;
@@ -422,7 +422,7 @@ bool CVideoShaderPresetDX::CreateBuffers()
   return true;
 }
 
-void CVideoShaderPresetDX::PrepareParameters(const IShaderTexture* texture, CPoint dest[])
+void CVideoShaderPresetDX::PrepareParameters(const IShaderTexture* texture, const CPoint dest[])
 {
   // prepare params for all shaders except the last (needs special flag)
   for (unsigned shaderIdx = 0; shaderIdx < m_pVideoShaders.size() - 1; ++shaderIdx)

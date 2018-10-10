@@ -62,6 +62,7 @@ void CDialogGameVideoFilter::PreInit()
 {
   m_items.Clear();
 
+  InitScalingMethods();
   InitVideoFilters();
 
   if (m_items.Size() == 0)
@@ -73,7 +74,7 @@ void CDialogGameVideoFilter::PreInit()
   m_bHasDescription = false;
 }
 
-void CDialogGameVideoFilter::InitVideoFilters()
+void CDialogGameVideoFilter::InitScalingMethods()
 {
   if (m_gameVideoHandle)
   {
@@ -81,12 +82,10 @@ void CDialogGameVideoFilter::InitVideoFilters()
     {
       if (m_gameVideoHandle->SupportsScalingMethod(scalingMethodProps.scalingMethod))
       {
-        RETRO::CRenderVideoSettings videoSettings;
-        videoSettings.SetScalingMethod(scalingMethodProps.scalingMethod);
-
         CFileItemPtr item = std::make_shared<CFileItem>(g_localizeStrings.Get(scalingMethodProps.nameIndex));
         item->SetLabel2(g_localizeStrings.Get(scalingMethodProps.categoryIndex));
-        item->SetProperty("game.videofilter", CVariant{ videoSettings.GetVideoFilter() });
+        item->SetProperty("game.videofilter", CVariant{ PROPERTY_NO_VIDEO_FILTER });
+        item->SetProperty("game.scalingmethod", CVariant((int)scalingMethodProps.scalingMethod));
         item->SetProperty("game.videofilterdescription", CVariant{ g_localizeStrings.Get(scalingMethodProps.descriptionIndex) });
         m_items.Add(std::move(item));
       }
@@ -219,6 +218,11 @@ unsigned int CDialogGameVideoFilter::GetFocusedItem() const
 void CDialogGameVideoFilter::PostExit()
 {
   m_items.Clear();
+}
+
+std::string CDialogGameVideoFilter::GetLocalizedString(uint32_t code)
+{
+  return g_localizeStrings.GetAddonString(PRESETS_ADDON_NAME, code);
 }
 
 void CDialogGameVideoFilter::GetProperties(const CFileItem &item, std::string &videoFilter, std::string &description)

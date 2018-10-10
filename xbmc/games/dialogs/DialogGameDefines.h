@@ -20,4 +20,4 @@
 #pragma once
 
 // String of list item property "game.videofilter" when no filter is set
-#define PROPERTY_NO_VIDEO_FILTER "-"
+#define PROPERTY_NO_VIDEO_FILTER ""

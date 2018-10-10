@@ -50,6 +50,8 @@ namespace RETRO
     void SetRenderRotation(unsigned int rotationDegCCW) { m_rotationDegCCW = rotationDegCCW; }
 
   private:
+    bool UsesShaderPreset() const;
+
     SCALINGMETHOD m_scalingMethod;
     STRETCHMODE m_stretchMode;
     unsigned int m_rotationDegCCW;

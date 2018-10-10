@@ -25,7 +25,7 @@ CGameServices::CGameServices(CControllerManager &controllerManager,
   m_controllerManager(controllerManager),
   m_gameRenderManager(renderManager),
   m_profileManager(profileManager),
-  m_gameSettings(new CGameSettings())
+  m_gameSettings(new CGameSettings()),
   m_videoShaders(new SHADER::CVideoShaderPresetFactory(addons, binaryAddons))
 {
 }

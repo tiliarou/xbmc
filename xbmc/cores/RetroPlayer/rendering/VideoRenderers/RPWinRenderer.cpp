@@ -56,7 +56,7 @@ CWinRenderBuffer::CWinRenderBuffer(AVPixelFormat pixFormat, DXGI_FORMAT dxFormat
 
 bool CWinRenderBuffer::CreateTexture()
 {
-  if (!m_intermediateTarget->Create(m_width, m_height, 1, D3D11_USAGE_DYNAMIC, m_targetDxFormat))
+  if (!m_intermediateTarget->GetPointer()->Create(m_width, m_height, 1, D3D11_USAGE_DYNAMIC, m_targetDxFormat))
   {
     CLog::Log(LOGERROR, "WinRenderer: Intermediate render target creation failed");
     return false;
@@ -69,7 +69,7 @@ bool CWinRenderBuffer::GetTexture(uint8_t*& data, unsigned int& stride)
 {
   // Scale and upload texture
   D3D11_MAPPED_SUBRESOURCE destlr;
-  if (!m_intermediateTarget->LockRect(0, &destlr, D3D11_MAP_WRITE_DISCARD))
+  if (!m_intermediateTarget->GetPointer()->LockRect(0, &destlr, D3D11_MAP_WRITE_DISCARD))
   {
     CLog::Log(LOGERROR, "WinRenderer: Failed to lock swtarget texture into memory");
     return false;
@@ -83,7 +83,7 @@ bool CWinRenderBuffer::GetTexture(uint8_t*& data, unsigned int& stride)
 
 bool CWinRenderBuffer::ReleaseTexture()
 {
-  if (!m_intermediateTarget->UnlockRect(0))
+  if (!m_intermediateTarget->GetPointer()->UnlockRect(0))
   {
     CLog::Log(LOGERROR, "WinRenderer: Failed to unlock swtarget texture");
     return false;
@@ -284,6 +284,13 @@ bool CRPWinRenderer::SupportsScalingMethod(SCALINGMETHOD method)
 
 void CRPWinRenderer::Render(CD3DTexture *target)
 {
+  const CPoint destPoints[4] = {
+    m_rotatedDestCoords[0],
+    m_rotatedDestCoords[1],
+    m_rotatedDestCoords[2],
+    m_rotatedDestCoords[3]
+  };
+
   CWinRenderBuffer *renderBuffer = static_cast<CWinRenderBuffer*>(m_renderBuffer);
   if (renderBuffer == nullptr)
     return;
@@ -292,11 +299,14 @@ void CRPWinRenderer::Render(CD3DTexture *target)
   if (renderBufferTarget == nullptr)
     return;
 
-  // Are we using video shaders?
-  if (m_bUseShaderPreset && m_renderBuffer != nullptr)
-  {
-    CPoint destPoints[4];
+  UpdateVideoShaders();
 
+  // Are we using video shaders?
+  if (m_bUseShaderPreset)
+  {
+    // TODO: Orientation?
+    /*
+    CPoint destPoints[4];
     // select destination rectangle
     if (m_renderOrientation)
     {
@@ -311,8 +321,8 @@ void CRPWinRenderer::Render(CD3DTexture *target)
       destPoints[2] = { destRect.x2, destRect.y2 };
       destPoints[3] = { destRect.x1, destRect.y2 };
     }
+    */
 
-    CD3DTexture *intermediateTarget = renderBufferTarget->GetPointer();
     // Render shaders and ouput to display
     m_targetTexture.SetTexture(target);
     if (!m_shaderPreset->RenderUpdate(destPoints, renderBufferTarget, &m_targetTexture))
@@ -344,4 +354,5 @@ void CRPWinRenderer::Render(CD3DTexture *target)
           m_context.UseLimitedColor() ? 1 : 0);
     }
   }
+}
 }

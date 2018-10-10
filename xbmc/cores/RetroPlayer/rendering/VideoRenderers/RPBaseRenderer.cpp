@@ -203,21 +203,28 @@ void CRPBaseRenderer::MarkDirty()
   //CServiceBroker::GetGUI()->GetWindowManager().MarkDirty(m_dimensions); //! @todo
 }
 
+/**
+ * \brief Updates everything needed for video shaders (shader presets)
+ * Needs to be called after m_renderBuffer has been set
+ */
 void CRPBaseRenderer::UpdateVideoShaders()
 {
-  if (m_shadersNeedUpdate && !m_renderSettings.VideoSettings().GetShaderPreset().empty())
+  if (m_shadersNeedUpdate)
   {
-    m_shadersNeedUpdate = false;
-
     if (m_shaderPreset)
     {
-      auto sourceWidth = static_cast<unsigned>(m_sourceRect.Width());
-      auto sourceHeight = static_cast<unsigned>(m_sourceRect.Height());
+      if (!m_renderBuffer) {
+        CLog::Log(LOGWARNING, "%s - Render buffer not set, can't update video shader source size!", __FUNCTION__);
+        return;
+      }
+      auto sourceWidth = m_renderBuffer->GetWidth();
+      auto sourceHeight = m_renderBuffer->GetHeight();
 
       // We need to set this here because m_sourceRect isn't valid on init/pre-init
       m_shaderPreset->SetVideoSize(sourceWidth, sourceHeight);
       m_bUseShaderPreset = m_shaderPreset->SetShaderPreset(m_renderSettings.VideoSettings().GetShaderPreset());
     }
+    m_shadersNeedUpdate = false;
   }
 }
 
@@ -230,9 +237,7 @@ void CRPBaseRenderer::PreRender(bool clear)
   if (clear)
     m_context.Clear(m_context.UseLimitedColor() ? 0x101010 : 0);
 
-  ManageRenderArea();
-
-  UpdateVideoShaders();
+  //ManageRenderArea(*m_renderBuffer);
 }
 
 void CRPBaseRenderer::PostRender()

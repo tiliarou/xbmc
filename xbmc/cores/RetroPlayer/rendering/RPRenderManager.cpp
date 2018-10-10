@@ -216,9 +216,6 @@ void CRPRenderManager::AddFrame(const uint8_t* data, size_t size, unsigned int w
 void CRPRenderManager::SetSpeed(double speed)
 {
   m_speed = speed;
-
-  for (const auto &renderer : m_renderers)
-    renderer->SetSpeed(speed); //! @todo Retroactive set speed for newly created renderers
 }
 
 void CRPRenderManager::FrameMove()
@@ -362,13 +359,7 @@ bool CRPRenderManager::SupportsScalingMethod(SCALINGMETHOD method) const
   {
     CRenderVideoSettings renderSettings;
     renderSettings.SetScalingMethod(method);
-    bool hasAtLeastOneRenderer = !m_renderers.empty();
-    bool bufferPoolSupport = bufferPool->IsCompatible(renderSettings);
-    bool renderersSupport = std::all_of(m_renderers.begin(), m_renderers.end(),
-      [method](const std::shared_ptr<CRPBaseRenderer>& renderer) { return renderer->Supports(method); });
-
-    // If method is supported by the buffer pool and all the renderers, the manager supports it
-    if (hasAtLeastOneRenderer && bufferPoolSupport && renderersSupport)
+    if (bufferPool->IsCompatible(renderSettings))
       return true;
   }
 
@@ -474,7 +465,7 @@ std::shared_ptr<CRPBaseRenderer> CRPRenderManager::GetRenderer(IRenderBufferPool
     // Try to create a renderer now, unless the shader preset has failed already
     if (shaderPreset.empty() || m_failedShaderPresets.find(shaderPreset) == m_failedShaderPresets.end())
       renderer.reset(m_processInfo.CreateRenderer(bufferPool, renderSettings));
-    if (renderer && renderer->Configure(m_format, m_width, m_height))
+    if (renderer && renderer->Configure(m_format))
     {
       // Ensure we have a render buffer for this renderer
       CreateRenderBuffer(renderer->GetBufferPool());
@@ -637,8 +628,6 @@ CRenderVideoSettings CRPRenderManager::GetEffectiveSettings(const IGUIRenderSett
       effectiveSettings.SetRenderStretchMode(settings->GetSettings().VideoSettings().GetRenderStretchMode());
     if (settings->HasRotation())
       effectiveSettings.SetRenderRotation(settings->GetSettings().VideoSettings().GetRenderRotation());
-    if (settings->HasShaderPreset())
-      effectiveSettings.SetShaderPreset(settings->GetSettings().VideoSettings().GetShaderPreset());
   }
 
   // Sanitize settings
@@ -647,12 +636,5 @@ CRenderVideoSettings CRPRenderManager::GetEffectiveSettings(const IGUIRenderSett
     effectiveSettings.SetScalingMethod(m_processInfo.GetDefaultScalingMethod());
   }
 
-  if (!effectiveSettings.GetShaderPreset().empty())
-    effectiveSettings.SetScalingMethod(VS_SCALINGMETHOD_AUTO);
-  ESCALINGMETHOD scalingMethod = effectiveSettings.GetScalingMethod();
-
-  // If the method is AUTO or unsupported by the manager, we need to set it to the default
-  if (scalingMethod == VS_SCALINGMETHOD_AUTO || !SupportsScalingMethod(scalingMethod))
-    effectiveSettings.SetScalingMethod(m_processInfo.GetDefaultScalingMethod());
   return effectiveSettings;
 }
